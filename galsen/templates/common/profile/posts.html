@@ -1,7 +1,7 @@
 {% load static %}
 
 <!-- ============ Posts ================= -->
-{% for post in CustomUser.post_set.all %}
+{% for post in CustomUser.post_set.all|dictsortreversed:'date_creation_post' %}
     <section class="actuality">
         <section class="profile">
             <a href="#" class="user_infos">

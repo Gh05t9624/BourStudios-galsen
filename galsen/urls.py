@@ -23,11 +23,17 @@ from .views import PersonnelDetails, EcoleDetails, EntrepriseDetails, update_pos
 # ========== Update Statu: Personnels, Entreprise, Ecole ===================
 from galsen.views import update, update_profile, update_banner, profile
 
+# ========== Les Commentaires: Post ===================
+from galsen.views import post_comments
+
 from . import views
 
 
 
 urlpatterns = [
+    # ========== Les Commentaires ===================
+    path('post/<int:post_id>/comments/', post_comments, name='post_comments'),
+    
     # ========== Details: Personnels, Entreprise, Ecole ===================
     path('personnel/<int:pk>/', PersonnelDetails.as_view(), name='personnel_details'),
     path('ecole/<int:pk>/', EcoleDetails.as_view(), name='ecole_details'),

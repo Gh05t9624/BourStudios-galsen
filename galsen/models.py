@@ -77,12 +77,14 @@ class Post(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     video = models.FileField(upload_to='post_videos/')
     contenu_post = models.TextField()
-    nombre_like = models.IntegerField(default=0)
-    nombre_commentaire = models.IntegerField(default=0)
     tag_post = models.CharField(max_length=255)
     categories = models.CharField(max_length=255, choices=CATEGORIES, default='poste')
     session_info = models.CharField(max_length=255, null=True, blank=True)
     date_creation_post = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def nombre_commentaire(self):
+        return Commentaire.objects.filter(post=self).count()
     
 class MediasPost(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.conf import settings
 import os
 import time
+from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from .forms import CustomUserCreationForm
@@ -9,7 +10,7 @@ from django.core.exceptions import ValidationError
 from django.contrib import messages
 from .decorators import role_required
 
-from .models import CustomUser, Post, MediasPost, Job, Boutique
+from .models import CustomUser, Post, MediasPost, Job, Boutique, Commentaire
 from django.views.generic import DetailView
 from galsen.utils import obtenir_marque_dispositif  
 
@@ -117,7 +118,7 @@ def delete_post(request, id):
     # Supprimez le post
     post.delete()
 
-    user_role = request.user.rôle  # Utilisez 'rôle' selon votre modèle CustomUser
+    user_role = request.user.rôle  # Utilisez 'rôle' selon le modèle CustomUser
     if user_role == 'admin':
         return redirect('Ad_profile')
     elif user_role == 'personnel':
@@ -431,6 +432,14 @@ def Ec_profile(request):
 def Ec_job(request):
     CustomUser = request.user
     return render(request, 'Ecole/profiles/mon_profile/job.html', {'CustomUser': CustomUser})
+
+# ========== Les commentaires Posts ===================
+@role_required(['admin','personnel', 'ecole', 'entreprise'])
+def post_comments(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    comments = Commentaire.objects.filter(post=post)
+    return render(request, 'Commentaire/comment_post.html', {'post': post, 'comments': comments})
+
 
 ''' =========== personnels ========= '''
 @role_required(['personnel'])

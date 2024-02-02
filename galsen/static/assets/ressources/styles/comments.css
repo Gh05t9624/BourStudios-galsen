@@ -1,0 +1,414 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+/* Variable CSS */
+:root
+{
+    --header-height: 3rem;
+
+    
+
+    /* font and typography */
+    --body-font: 'Open Sans', sans-serif;
+
+    --h1-font-size: 1.5rem;
+    --normal-font-size: .938rem;
+    --tiny-font-size: .625rem;
+
+    /* z index */
+    --z-tooltip: 10;
+    --z-fixed: 100;
+}
+
+:root
+{
+      /*========== Colors ==========*/
+  --hue-color: 240;
+
+  --first-color: hsl(var(--hue-color), 53%, 49%);
+  --title-color: hsl(var(--hue-color), 53%, 15%);
+  --text-color: hsl(var(--hue-color), 1%, 4%);
+  --text-color-light: hsl(var(--hue-color), 12%, 65%);
+  --container-color: #fff;
+  --body-color: hsl(var(--hue-color), 24%, 94%);
+  --color-danger: hsl(0, 95%, 65%);
+
+  --color-primary-light: 0 0.8rem 0.8rem rgba(71, 7, 234, 0.2);
+  --color-danger-light: 0 0.8rem 0.8rem rgba(255, 67, 54, 0.2);
+  --color-success-light: 0 0.8rem 0.8rem rgba(34, 202, 75, 0.2);
+  --color-purple-light: 0 0.8rem 0.8rem rgba(160, 99, 245, 0.2);
+
+    /* Tailles */
+    --border-radius: 2rem;
+    --card-border-radius: 1rem;
+    --btn-padding: 0.6rem 2rem;
+    --search-padding: 0.6rem 1rem;
+    --card-padding: 1rem;
+
+    --sticky-top-left: 5.4rem;
+    --sticky-top-right: -18rem
+    
+}
+
+/*========== Variables Dark theme ==========*/
+body.dark-theme
+{
+    --title-color: hsl(var(--hue-color), 12%, 95%);
+    --text-color: hsl(var(--hue-color), 12%, 75%);
+    --body-color: hsl(var(--hue-color), 10%, 16%);
+    --container-color: hsl(var(--hue),24%, 12%);
+}
+
+*
+{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body
+{
+    display: flex;
+    align-items: center;
+    background: #272727;
+}
+
+.black
+{
+    color: #299bd5;
+    font-weight: bold;
+}
+
+.container
+{
+    width: 500px;
+    max-width: 600px;
+    margin: auto;
+}
+
+.chat
+{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: var(--body-color);
+}
+
+.chat-header
+{
+    display: flex;
+}
+
+.profile
+{
+    width: 100%;
+    background: #299bd5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: relative;
+}
+
+.profile .left
+{
+    display: flex;
+    padding: 5px;
+}
+
+.profile .left a
+{
+    text-decoration: none;
+    color: var(--body-color);
+    width: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.profile .left img
+{
+    width: 45px;
+    height: 45px;
+    display: inline-block;
+    border-radius: 50%;
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.778),
+                inset -3px -3px 5px rgba(0, 0, 0, 0.5);
+    border: 2.5px solid #299bd5;
+    object-fit: cover;
+}
+
+.profile .left .details
+{
+    padding: 5px;
+}
+
+.profile .left .details h2
+{
+    font-size: 15px;
+    color: var(--body-color);
+}
+
+.profile .left .details span
+{
+    font-size: 10px;
+    color: var(--color-danger);
+}
+
+.profile .right
+{
+    display: flex;
+    align-items: center;
+}
+
+.profile .right a
+{
+    width: 35px;
+    text-decoration: none;
+    color: var(--body-color);
+}
+
+.chat-box
+{
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    flex: 1;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.chat-box::-webkit-scrollbar
+{
+    display: none;
+}
+
+.chat-r
+{
+    display: block;
+    padding: 5px;
+}
+
+.chat-r .mess-r span
+{
+    display: flex;
+    padding: 5px;
+}
+
+.chat-r .mess-r span .auteur
+{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.778),
+                inset -3px -3px 5px rgba(0, 0, 0, 0.5);
+    border: 3px solid #299bd5;
+}
+
+.chat-r .mess-r span p
+{
+    width: 250px;
+    padding: 15px;
+    background: var(--body-color);
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.778),
+                inset -3px -3px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    color: var(--title-color);
+    text-align: justify;
+    letter-spacing: 0.1px;
+    border: 1px solid #299bd5;
+}
+
+.chat-r .mess-r span p b a
+{
+    color: var(--color-danger);
+}
+
+.chat-r .mess-r span p b a .reaction
+{
+    width: 20px;
+    height: 20px;
+    margin-right: -13px;
+    border-radius: 50%;
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.778),
+                inset -3px -3px 5px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--color-danger);
+}
+
+.chat-r .mess-r span p span
+{
+    display: block;
+    font-size: 10px;
+    color: #299bd5;
+    font-weight: bold;
+}
+
+.chat-r .mess-r span p span a
+{
+    font-size: 15px;
+    margin: 10px;
+}
+
+.chat-footer
+{
+    display: flex;
+}
+
+.chat-footer .forms
+{
+    width: 100%;
+    background: #299bd5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: relative;
+}
+
+.chat-footer .left
+{
+    display: flex;
+}
+
+.chat-footer .left .emo
+{
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.chat-footer .left .emo i
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    color: #fff;
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.778),
+                inset -3px -3px 5px rgba(0, 0, 0, 0.5);
+    border: 2.5px solid #fff;
+    border-radius: 50%;
+}
+
+.chat-footer .left textarea 
+{
+    position: fixed;
+    bottom: 0;
+    left: 46%;
+    transform: translateX(-50%);
+    max-width: 90%;
+    width: 300px;
+    resize: none;
+    height: 60px;
+    outline: none;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 20px;
+    border-radius: 5px;
+    max-height: 330px;
+    caret-color: 21px solid var(--color-danger);
+    border: 1px solid #bfbfbf;
+    background: #299bd5;
+    color: var(--body-color);
+    font-weight: bold;
+    border: 2.5px solid #299bd5;
+}
+
+.chat-footer .left textarea::placeholder
+{
+    color: #ffffffc6;
+}
+
+.chat-footer .left textarea::-webkit-scrollbar
+{
+    width: 7px;
+}
+
+.chat-footer .left textarea::-webkit-scrollbar-track
+{
+    background: var(--body-color);
+    border-radius: 25px;
+}
+
+.chat-footer .left textarea::-webkit-scrollbar-thumb
+{
+    background: var(--title-color);
+    border-radius: 25px;
+}
+
+.chat-footer .left textarea::-webkit-scrollbar-thumb:hover
+{
+    background: #b3b3b3;
+}
+
+@media (max-width: 600px) {
+    .chat-footer .left textarea {
+        width: 62%;
+        left: 41%;
+        max-width: 95%;
+        padding-right: 20px;
+    }
+}
+
+
+.chat-footer .right
+{
+    display: flex;
+}
+
+.chat-footer .right label
+{
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: var(--body-color);
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.778),
+                inset -3px -3px 5px rgba(0, 0, 0, 0.5);
+    border: 1.5px solid #fff;
+    z-index: 1;
+}
+
+.chat-footer .right button
+{
+    text-decoration: none;
+    border: none;
+    background: #299bd5;
+    color: var(--body-color);
+    font-style: none;
+    font-size: 30px;
+    margin-right: 12px;
+    cursor: pointer;
+}
+
+.chat-footer .right button i
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    color: #fff;
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.778),
+                inset -3px -3px 5px rgba(0, 0, 0, 0.5);
+    border: 2.5px solid #fff;
+    border-radius: 50%;
+}

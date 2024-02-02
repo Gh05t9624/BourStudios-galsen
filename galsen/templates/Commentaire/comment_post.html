@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Commentaires</title>
+        <link rel="stylesheet" href="{% static 'assets/ressources/styles/comments.css' %}">
+
+        <!-- Box Icone -->
+    <link rel="stylesheet" href="{% static 'assets/icones/font-awesome/css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/icones/font-awesome/css/font-awesome.min.css' %}">
+
+    </head>
+    <body>
+        
+        <div class="container">
+            <div class="chat">
+
+                <div class="chat-header">
+                    <div class="profile">
+                        <div class="left">
+                            <a href="#" id="boutonRetour">
+                                <i class="fa fa-arrow-left arrow"></i>
+                            </a>
+                            {% for media in post.mediaspost_set.all %}
+                                {% if media.image %}
+                                    <img src="{{ media.image.url }}" class="profile">
+                                {% endif %}
+                            {% endfor %}
+                            <div class="details">
+                                <h2>{{ post.contenu_post|safe|truncatewords_html:5 }}</h2>
+                                <span>Les commentaires...</span>
+                            </div>
+                        </div>
+                        <div class="right">
+
+                            <a href="#">
+                                <i class="fa fa-ellipsis-v icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-box">
+
+                    {% for comment in comments %}
+                        <div class="chat-r">
+                            <div class="mess mess-r">
+                                <span>
+                                    <a href="#"> 
+                                        {% if user.profile_image and user.profile_image.url %}
+                                            <img src="{{ comment.user.profile_image.url }}" class="auteur">
+                                        {% else %}
+                                            <img src="{% static 'assets/default/user.png' %}"class="auteur">
+                                        {% endif %}
+                                    </a>
+                                    <p>
+                                        <i class="black">{{ comment.user.first_name }} {{ comment.user.last_name }}:</i>
+                                        {{ comment.contenu_commentaire }}
+
+                                        <span>{{ comment.date_creation }} | <a href="#"> Répondre </a></span>
+                                        <b><a href="#">Réaction: <img src="assets/images/pic-4.png" class="reaction"> <img src="assets/images/pic-4.png" class="reaction"> <img src="assets/images/pic-4.png" class="reaction"> <img src="assets/images/pic-4.png" class="reaction"></a> </b>
+                                    </p>
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="chat-footer">
+                    <form class="forms">
+                        <div class="left">
+                            <a href="#" class="emo">
+                                <i class="fa fa-smile-o"></i>
+                            </a>
+                            <textarea spellcheck="false" placeholder="Votre commentaire..." required></textarea>
+                        </div>
+                        <div class="right">
+                            <label for="#"><i class="fa fa-microphone"></i></label>
+
+                            <button type="submit"><i class="fa fa-send"></i></button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <script src="{% static 'assets/ressources/scripts/chats.js' %}"></script>
+        <script src="{% static 'assets/ressources/scripts/theme.js' %}"></script>
+        <script src="{% static 'assets/ressources/scripts/Retour.js' %}"></script>
+        <!-- <script src="{% static 'assets/algos/scripts/secrete.js' %}"></script> -->
+
+    </body>
+</html>
