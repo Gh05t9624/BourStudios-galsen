@@ -102,19 +102,27 @@
         </div>
 
         <section class="followers">
-            <label href="#" class="like_btn">
-                <span id="icon">
-                    <i class="fa fa-thumbs-up" id="count"> 0</i>
+            <a href="#" class="like-btn" onclick="toggleLike()">
+                <span class="like-icon" id="likeIcon">
+                    <i class="fa fa-thumbs-up" ></i>
                 </span>
-            </label>
+            </a>
 
-            <label href="#">
-                <i class="fa fa-comments"></i>
-            </label>
+            <a href="{% url 'post_comments' post.id %}">
+                <i class="fa fa-comments">
+                    <span class="primary" style="font-weight: bold;">
+                        {% if post.nombre_commentaire > 1000 %}
+                            {{ post.nombre_commentaire|divisibleby:1000|floatformat:"0.1" }}k
+                        {% else %}
+                            {{ post.nombre_commentaire }}
+                        {% endif %}
+                    </span>
+                </i>
+            </a>
 
-            <label href="#" id="pop-share">
+            <a href="#" id="pop-share">
                 <i class="fa fa-share-alt"></i>
-            </label>
+            </a>
         </section>
         
 

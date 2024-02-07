@@ -49,6 +49,73 @@
     
 }
 
+.text-muted
+{
+    color: gray;
+}
+
+.blanc
+{
+    color: var(--title-color);
+}
+
+.primary
+{
+    color: #299bd5;
+    /* rgb(71, 7, 234) */
+}
+
+.danger
+{
+    color: var(--color-danger);
+}
+
+.success
+{
+    color: rgb(34, 202, 75);
+}
+
+.purple
+{
+    color: rgb(160, 99, 245);
+}
+
+.bg-primary
+{
+    background: #299bd5;
+    /* rgb(71, 7, 234) */
+    box-shadow: 0 0.8rem 0.8rem rgba(71, 7, 234, 0.2);
+}
+
+.bg-danger
+{
+    background: var(--color-danger);
+    box-shadow: 0 0.8rem 0.8rem rgba(255, 67, 54, 0.2);
+}
+
+.bg-success
+{
+    background: rgb(34, 202, 75);
+    box-shadow: 0 0.8rem 0.8rem rgba(34, 202, 75, 0.2);
+}
+
+.bg-purple
+{
+    background: rgb(160, 99, 245);
+    box-shadow: 0 0.8rem 0.8rem rgba(160, 99, 245, 0.2);
+}
+
+.bg-dark
+{
+    background: #27282f;
+    box-shadow: 0 0.8rem 0.8rem rgba(0, 0, 0, 0.2);
+}
+
+.normal
+{
+    color: var(--body-color);
+}
+
 /*========== Variables Dark theme ==========*/
 body.dark-theme
 {
@@ -212,14 +279,24 @@ body
     width: 250px;
     padding: 15px;
     background: var(--body-color);
-    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
+    /* box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
                 inset 2px 2px 5px rgba(255, 255, 255, 0.778),
-                inset -3px -3px 5px rgba(0, 0, 0, 0.5);
+                inset -3px -3px 5px rgba(0, 0, 0, 0.5); */
     border-radius: 10px;
     color: var(--title-color);
-    text-align: justify;
-    letter-spacing: 0.1px;
     border: 1px solid #299bd5;
+}
+
+.chat-r .mess-r span p b
+{
+    text-align: justify;
+    font-weight: 400;
+}
+
+.chat-r .mess-r span p .ImgComment
+{
+    width: 230px;
+    height: 210px;
 }
 
 .chat-r .mess-r span p b a
@@ -269,6 +346,45 @@ body
     position: relative;
 }
 
+
+
+#imagePreview {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    top: -105px;
+    left: 62%;
+}
+
+.preview-item {
+    margin: 5px;
+    position: relative;
+}
+
+.preview-item img 
+{
+    max-width: 100px;
+    max-height: 100px;
+    border: 1px solid var(--color-danger);
+    border-radius: 5px;
+}
+
+#imageInput
+{
+    display: none;
+}
+
+.delete-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 2px;
+    border-radius: 50%;
+}
+
 .chat-footer .left
 {
     display: flex;
@@ -282,6 +398,7 @@ body
     padding: 5px;
     font-size: 30px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .chat-footer .left .emo i
@@ -291,12 +408,12 @@ body
     justify-content: center;
     width: 30px;
     height: 30px;
-    color: #fff;
-    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
-                inset 2px 2px 5px rgba(255, 255, 255, 0.778),
+    color: #ffff00;
+    box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.778),
                 inset -3px -3px 5px rgba(0, 0, 0, 0.5);
-    border: 2.5px solid #fff;
+    border: 2.5px solid #ffff00;
     border-radius: 50%;
+    z-index: 1;
 }
 
 .chat-footer .left textarea 
@@ -359,7 +476,6 @@ body
     }
 }
 
-
 .chat-footer .right
 {
     display: flex;
@@ -369,32 +485,46 @@ body
 {
     width: 45px;
     height: 45px;
-    display: flex;
-    align-items: center;
     justify-content: center;
     font-size: 30px;
-    color: var(--body-color);
-    margin-right: 20px;
+    margin-right: 11px;
     display: flex;
     align-items: center;
     cursor: pointer;
     border-radius: 50%;
+    background: #fff;
     box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
                 inset 2px 2px 5px rgba(255, 255, 255, 0.778),
                 inset -3px -3px 5px rgba(0, 0, 0, 0.5);
-    border: 1.5px solid #fff;
+    border: 2.5px solid rgb(34, 202, 75);
     z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.chat-footer .right label:hover
+{
+    opacity: 0.8;
+    transition: 0.3s;
+    content: '';
+    background: var(--color-danger);
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.778),
+                inset -3px -3px 5px rgba(0, 0, 0, 0.5);
+}
+
+.chat-footer .right label:active
+{
+    transform: translateY(5px);
 }
 
 .chat-footer .right button
 {
-    text-decoration: none;
+    background: transparent;
     border: none;
-    background: #299bd5;
-    color: var(--body-color);
-    font-style: none;
     font-size: 30px;
-    margin-right: 12px;
+    margin-right: 10px;
     cursor: pointer;
 }
 
@@ -405,10 +535,66 @@ body
     justify-content: center;
     width: 45px;
     height: 45px;
+    color: var(--color-danger);
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.778),
+                inset -3px -3px 5px rgba(0, 0, 0, 0.5);
+    border: 2.5px solid var(--color-danger);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.chat-footer .right button i:hover
+{
+    opacity: 0.8;
+    transition: 0.3s;
+    content: '';
+    background: var(--color-danger);
     color: #fff;
+    font-weight: bold;
     box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.25),
                 inset 2px 2px 5px rgba(255, 255, 255, 0.778),
                 inset -3px -3px 5px rgba(0, 0, 0, 0.5);
     border: 2.5px solid #fff;
-    border-radius: 50%;
 }
+
+.chat-footer .right button i:active
+{
+    transform: translateY(5px);
+}
+
+/* Emoji-picker caché par défaut */
+emoji-picker[for="commentTextarea"] {
+    display: none;
+}
+
+/* Style d'affichage lorsqu'il est visible */
+.emoji-picker-visible {
+    display: block !important;
+    position: fixed;
+}
+
+emoji-picker
+{
+    max-width: 500px;
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: -398px;
+}
+
+/* emoji-picker {
+    max-width: 100%;
+    width: 100%;
+    position: absolute;
+    bottom: 60px; 
+    left: 0;
+}
+
+@media screen and (min-width: 768px) {
+    emoji-picker {
+        max-width: 500px;
+        left: 50%; 
+        transform: translateX(-50%);
+    }
+} */

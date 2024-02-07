@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{% static 'assets/icones/font-awesome/css/font-awesome.css' %}">
     <link rel="stylesheet" href="{% static 'assets/icones/font-awesome/css/font-awesome.min.css' %}">
 
+
     </head>
     <body>
         
@@ -29,7 +30,7 @@
                                 {% endif %}
                             {% endfor %}
                             <div class="details">
-                                <h2>{{ post.contenu_post|safe|truncatewords_html:5 }}</h2>
+                                <h2>{{ post.contenu_post|safe|truncatewords_html:1.8 }}</h2>
                                 <span>Les commentaires...</span>
                             </div>
                         </div>
@@ -57,7 +58,14 @@
                                     </a>
                                     <p>
                                         <i class="black">{{ comment.user.first_name }} {{ comment.user.last_name }}:</i>
-                                        {{ comment.contenu_commentaire }}
+                                        {% if comment.image.url %}
+                                            {% if comment.image %}
+                                                <img src="{{ comment.image.url }}" class="ImgComment">
+                                            {% endif %}
+                                        {% endif %}
+                                        <b>
+                                            {{ comment.contenu_commentaire|safe }}
+                                        </b>
 
                                         <span>{{ comment.date_creation }} | <a href="#"> Répondre </a></span>
                                         <b><a href="#">Réaction: <img src="assets/images/pic-4.png" class="reaction"> <img src="assets/images/pic-4.png" class="reaction"> <img src="assets/images/pic-4.png" class="reaction"> <img src="assets/images/pic-4.png" class="reaction"></a> </b>
@@ -69,15 +77,25 @@
                 </div>
 
                 <div class="chat-footer">
-                    <form class="forms">
+                    <form class="forms" method="POST" action="{% url 'submit_comment' post.id %}">
+                        {% csrf_token %}
+                        <div id="imagePreview" class="preview"></div>
+                        <input type="file" id="imageInput" name="image" accept="image/*" onchange="previewFiles('imageInput', 'imagePreview', 3)">
                         <div class="left">
-                            <a href="#" class="emo">
+                            <a class="emo" id="emojiButton">
                                 <i class="fa fa-smile-o"></i>
                             </a>
-                            <textarea spellcheck="false" placeholder="Votre commentaire..." required></textarea>
+                            
+                            <textarea id="commentTextarea" spellcheck="false" placeholder="Votre commentaire..." name="contenu_commentaire" required></textarea>
+                            <!-- Ajoutez le picker à votre textarea -->
+                            <emoji-picker for="commentTextarea"></emoji-picker>
+                            
                         </div>
+                        
                         <div class="right">
-                            <label for="#"><i class="fa fa-microphone"></i></label>
+                            <label for="imageInput">
+                                <img src="{% static 'assets/categories/gallery.svg' %}" alt="">
+                            </label>
 
                             <button type="submit"><i class="fa fa-send"></i></button>
                         </div>
@@ -88,9 +106,10 @@
         </div>
 
         <script src="{% static 'assets/ressources/scripts/chats.js' %}"></script>
-        <script src="{% static 'assets/ressources/scripts/theme.js' %}"></script>
+        <script src="{% static 'assets/ressources/scripts/theme.js' %}"></script> 
         <script src="{% static 'assets/ressources/scripts/Retour.js' %}"></script>
         <!-- <script src="{% static 'assets/algos/scripts/secrete.js' %}"></script> -->
+        <script type="module" src="{% static 'node_modules/emoji-picker-element/picker.js' %}" defer></script>
 
     </body>
 </html>

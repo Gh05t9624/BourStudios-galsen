@@ -118,6 +118,26 @@ body {
 
 .action a
 {
+    font-weight: bold;
+}
+
+.action .Suivre
+{
+    font-size: 15px;
+}
+
+.action .Demande
+{
+    font-size: 10px;
+}
+
+.action .Ami
+{
+    font-size: 15px;
+}
+
+.action ul li a
+{
     color: var(--title-color);
 }
 

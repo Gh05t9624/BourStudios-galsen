@@ -12,7 +12,8 @@ from .decorators import role_required
 
 from .models import CustomUser, Post, MediasPost, Job, Boutique, Commentaire
 from django.views.generic import DetailView
-from galsen.utils import obtenir_marque_dispositif  
+from galsen.utils import obtenir_marque_dispositif
+from django.http import JsonResponse  
 
 
 # ========== Details: personnels ===================
@@ -439,6 +440,22 @@ def post_comments(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comments = Commentaire.objects.filter(post=post)
     return render(request, 'Commentaire/comment_post.html', {'post': post, 'comments': comments})
+
+@role_required(['admin','personnel', 'ecole', 'entreprise'])
+def submit_comment(request, post_id):
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=post_id)
+        contenu_commentaire = request.POST.get('contenu_commentaire')
+        image = request.FILES.get('image') if 'image' in request.FILES else None
+        
+        # Créez un nouvel objet Commentaire avec les données soumises
+        commentaire = Commentaire.objects.create(post=post, user=request.user, contenu_commentaire=contenu_commentaire, image=image)
+        
+        # Redirigez l'utilisateur vers la même page ou une autre page appropriée
+        return redirect('detail_post', post_id=post_id)
+    
+    # Gérer le cas où la méthode HTTP n'est pas POST
+    return redirect('detail_post', post_id=post_id)
 
 
 ''' =========== personnels ========= '''

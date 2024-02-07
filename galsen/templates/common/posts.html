@@ -84,10 +84,11 @@
                     </div>
                 </a>
                 <div class="action">
-                    <div><i class="fa fa-ellipsis-h"></i></div>
-                    <ul>
-                        <li class="current"><a href="#">Abonner</a></li>
-                    </ul>
+                    <a href="#" class="danger Suivre">Suivre?</a>
+
+                    <!-- <a href="#" class="text-muted Demande">Demande Envoyée</a> -->
+
+                    <!-- <a href="#" class="primary Ami">Ami(e)</a> -->
                 </div>
             </section>
 
@@ -151,11 +152,13 @@
     
                 <a href="{% url 'post_comments' post.id %}">
                     <i class="fa fa-comments">
-                        {% if post.nombre_commentaire > 1000 %}
-                            {{ post.nombre_commentaire|divisibleby:1000|floatformat:"0.1" }}k
-                        {% else %}
-                            {{ post.nombre_commentaire }}
-                        {% endif %}
+                        <span class="primary" style="font-weight: bold;">
+                            {% if post.nombre_commentaire > 1000 %}
+                                {{ post.nombre_commentaire|divisibleby:1000|floatformat:"0.1" }}k
+                            {% else %}
+                                {{ post.nombre_commentaire }}
+                            {% endif %}
+                        </span>
                     </i>
                 </a>
     
