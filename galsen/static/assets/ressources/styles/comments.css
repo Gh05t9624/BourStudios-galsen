@@ -30,7 +30,7 @@
   --text-color-light: hsl(var(--hue-color), 12%, 65%);
   --container-color: #fff;
   --body-color: hsl(var(--hue-color), 24%, 94%);
-  --color-danger: hsl(0, 95%, 65%);
+  --color-danger: #fb5151;
 
   --color-primary-light: 0 0.8rem 0.8rem rgba(71, 7, 234, 0.2);
   --color-danger-light: 0 0.8rem 0.8rem rgba(255, 67, 54, 0.2);

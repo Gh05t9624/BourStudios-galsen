@@ -437,25 +437,23 @@ def Ec_job(request):
 # ========== Les commentaires Posts ===================
 @role_required(['admin','personnel', 'ecole', 'entreprise'])
 def post_comments(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    comments = Commentaire.objects.filter(post=post)
-    return render(request, 'Commentaire/comment_post.html', {'post': post, 'comments': comments})
-
-@role_required(['admin','personnel', 'ecole', 'entreprise'])
-def submit_comment(request, post_id):
+    
     if request.method == 'POST':
-        post = get_object_or_404(Post, pk=post_id)
+        post = get_object_or_404(Post, id=post_id)  # Utilisation de id=post_id pour récupérer le post
         contenu_commentaire = request.POST.get('contenu_commentaire')
-        image = request.FILES.get('image') if 'image' in request.FILES else None
+        image = request.FILES.get('image')
         
         # Créez un nouvel objet Commentaire avec les données soumises
         commentaire = Commentaire.objects.create(post=post, user=request.user, contenu_commentaire=contenu_commentaire, image=image)
         
         # Redirigez l'utilisateur vers la même page ou une autre page appropriée
-        return redirect('detail_post', post_id=post_id)
+        #return redirect('detail_post', post_id=post_id)
     
-    # Gérer le cas où la méthode HTTP n'est pas POST
-    return redirect('detail_post', post_id=post_id)
+    post = get_object_or_404(Post, id=post_id)
+    comments = Commentaire.objects.filter(post=post)
+    return render(request, 'Commentaire/comment_post.html', {'post': post, 'comments': comments})
+
+
 
 
 ''' =========== personnels ========= '''

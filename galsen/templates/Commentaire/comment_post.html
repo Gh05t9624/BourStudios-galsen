@@ -58,13 +58,13 @@
                                     </a>
                                     <p>
                                         <i class="black">{{ comment.user.first_name }} {{ comment.user.last_name }}:</i>
-                                        {% if comment.image.url %}
+                                        {% if comment.image.url != None %}
                                             {% if comment.image %}
                                                 <img src="{{ comment.image.url }}" class="ImgComment">
                                             {% endif %}
                                         {% endif %}
                                         <b>
-                                            {{ comment.contenu_commentaire|safe }}
+                                            {{ comment.contenu_commentaire }}
                                         </b>
 
                                         <span>{{ comment.date_creation }} | <a href="#"> Répondre </a></span>
@@ -77,7 +77,7 @@
                 </div>
 
                 <div class="chat-footer">
-                    <form class="forms" method="POST" action="{% url 'submit_comment' post.id %}">
+                    <form class="forms" method="post" action="{% url 'post_comments' post_id=post.id %}">
                         {% csrf_token %}
                         <div id="imagePreview" class="preview"></div>
                         <input type="file" id="imageInput" name="image" accept="image/*" onchange="previewFiles('imageInput', 'imagePreview', 3)">
@@ -87,7 +87,7 @@
                             </a>
                             
                             <textarea id="commentTextarea" spellcheck="false" placeholder="Votre commentaire..." name="contenu_commentaire" required></textarea>
-                            <!-- Ajoutez le picker à votre textarea -->
+                            
                             <emoji-picker for="commentTextarea"></emoji-picker>
                             
                         </div>

@@ -33,7 +33,7 @@ from . import views
 urlpatterns = [
     # ========== Les Commentaires ===================
     path('post/<int:post_id>/comments/', post_comments, name='post_comments'),
-    path('post/<int:post_id>/comments/', views.submit_comment, name='submit_comment'),
+    #path('post/<int:post_id>/comments/', views.submit_comment, name='submit_comment'),
     
     # ========== Details: Personnels, Entreprise, Ecole ===================
     path('personnel/<int:pk>/', PersonnelDetails.as_view(), name='personnel_details'),
