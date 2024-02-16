@@ -10,7 +10,7 @@ from django.core.exceptions import ValidationError
 from django.contrib import messages
 from .decorators import role_required
 
-from .models import CustomUser, Post, MediasPost, Job, Boutique, Commentaire
+from .models import CustomUser, Post, MediasPost, Job, Boutique, Commentaire, Reponse
 from django.views.generic import DetailView
 from galsen.utils import obtenir_marque_dispositif
 from django.http import JsonResponse  
@@ -434,7 +434,7 @@ def Ec_job(request):
     CustomUser = request.user
     return render(request, 'Ecole/profiles/mon_profile/job.html', {'CustomUser': CustomUser})
 
-# ========== Les commentaires Posts ===================
+# ========== Les commentaires: Posts ===================
 @role_required(['admin','personnel', 'ecole', 'entreprise'])
 def post_comments(request, post_id):
     
@@ -453,8 +453,20 @@ def post_comments(request, post_id):
     comments = Commentaire.objects.filter(post=post)
     return render(request, 'Commentaire/comment_post.html', {'post': post, 'comments': comments})
 
-
-
+# ========== Les Réponses: Commentaires ===================
+@role_required(['admin','personnel', 'ecole', 'entreprise'])
+def comment_responses(request, comment_id):
+    
+    if request.method == 'POST':
+        comment = get_object_or_404(Commentaire, id=comment_id)
+        contenu_text = request.POST.get('contenu_text')
+        image = request.FILES.get('image')
+        
+        reponse = Reponse.objects.create(commentaire=comment, user=request.user, contenu_text=contenu_text, image=image)
+    
+    comment = get_object_or_404(Commentaire, id=comment_id)
+    responses = Reponse.objects.filter(commentaire_id=comment.id)
+    return render(request, 'Commentaire/response.html', {'comment': comment, 'responses': responses})
 
 ''' =========== personnels ========= '''
 @role_required(['personnel'])

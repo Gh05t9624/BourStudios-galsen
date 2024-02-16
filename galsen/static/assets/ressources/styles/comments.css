@@ -289,7 +289,10 @@ body
 
 .chat-r .mess-r span p b
 {
-    text-align: justify;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 230px;
     font-weight: 400;
 }
 
@@ -302,6 +305,13 @@ body
 .chat-r .mess-r span p b a
 {
     color: var(--color-danger);
+}
+
+a.comment_or_response
+{
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: bold;
 }
 
 .chat-r .mess-r span p b a .reaction

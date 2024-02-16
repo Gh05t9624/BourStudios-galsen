@@ -23,8 +23,8 @@ from .views import PersonnelDetails, EcoleDetails, EntrepriseDetails, update_pos
 # ========== Update Statu: Personnels, Entreprise, Ecole ===================
 from galsen.views import update, update_profile, update_banner, profile
 
-# ========== Les Commentaires: Post ===================
-from galsen.views import post_comments
+# ========== Les Commentaires: Post et Les Réponses:Commentaires ===================
+from galsen.views import post_comments, comment_responses
 
 from . import views
 
@@ -33,7 +33,7 @@ from . import views
 urlpatterns = [
     # ========== Les Commentaires ===================
     path('post/<int:post_id>/comments/', post_comments, name='post_comments'),
-    #path('post/<int:post_id>/comments/', views.submit_comment, name='submit_comment'),
+    path('comment/<int:comment_id>/responses/', comment_responses, name='comment_responses'),
     
     # ========== Details: Personnels, Entreprise, Ecole ===================
     path('personnel/<int:pk>/', PersonnelDetails.as_view(), name='personnel_details'),

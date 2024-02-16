@@ -97,6 +97,10 @@ class Commentaire(models.Model):
     image = models.ImageField(upload_to='comment_images/')
     date_creation = models.DateTimeField(auto_now_add=True)
     
+    @property
+    def nombre_response(self):
+        return Reponse.objects.filter(comment=self).count()
+    
 class Like(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
