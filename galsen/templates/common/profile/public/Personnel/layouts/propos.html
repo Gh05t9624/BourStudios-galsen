@@ -4,22 +4,22 @@
     <div>
         {% if etudiant.banner_image and etudiant.banner_image.url %}
             <a href="{{ etudiant.banner_image.url }}"  data-lightbox="mygallery" class="banner">
-                <img src=" {{ etudiant.banner_image.url }}" alt="">
+                <img src=" {{ etudiant.banner_image.url }}" alt="" class="enligne">
             </a>
             {% else %}
             <a href="{% static 'assets/default/user.png' %}"  data-lightbox="mygallery" class="banner">
-                <img src="{% static 'assets/default/user.png' %}">
+                <img src="{% static 'assets/default/user.png' %}" class="enligne">
             </a>
         {% endif %}
     </div>
         {% if etudiant.profile_image and etudiant.profile_image.url %}
             <a href="{{ etudiant.profile_image.url }}"  data-lightbox="mygallery" class="photo">
-                <img src="{{ etudiant.profile_image.url }}" alt="">
+                <img src="{{ etudiant.profile_image.url }}" alt="" class="enligne">
                 <h2> {{ etudiant.first_name }} {{ etudiant.last_name }} <p class="primary"> </p> </h2>
             </a>
         {% else %}
             <a href="{% static 'assets/default/user.png' %}"  data-lightbox="mygallery" class="photo">
-                <img src="{% static 'assets/default/user.png' %}">
+                <img src="{% static 'assets/default/user.png' %}" class="enligne">
                 <h2> {{ CustomUser.first_name }} {{ CustomUser.last_name }} <p class="primary"> {{ CustomUser.username }} </p> </h2>
             </a>
         {% endif %}

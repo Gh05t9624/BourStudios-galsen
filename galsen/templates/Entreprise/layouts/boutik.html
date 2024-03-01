@@ -24,6 +24,10 @@
         <!-- ===== Le NavBar ===== -->
         <nav class="nav contenu">
 
+            <button id="boutonRetour">
+                <i class="fa fa-arrow-left" aria-hidden="true"> Retour </i>
+            </button>
+
             <div id="header-toggle">
                 
                 <div class="conta_menu">
@@ -38,16 +42,19 @@
     </section>
     <!-- ==================== Fin du haut, Header en Mode Fixe ==================== -->
 
-    {% if user_boutique %}
 
         <!-- ==================== Sidebar ==================== -->
         <section class="sidebar" id="nabbar">
-            <div class="logo">
-                {% if user_boutique.photo_profil %}
-                    <img src="{{ user_boutique.photo_profil.url }}" alt="logo">
-                {% endif %}
-                <h2> {{ user_boutique.nom_boutique }} </h2>
-            </div>
+            {% if user_boutique %}
+                <div class="logo">
+                    {% if user_boutique.photo_profil and user_boutique.photo_profil.url %}
+                        <img src="{{ user_boutique.photo_profil.url }}" alt="logo">
+                    {% else %}
+                        <img src="{% static 'assets/default/user.png' %}">
+                    {% endif %}
+                    <h2> {{ user_boutique.nom_boutique }} </h2>
+                </div>
+            {% endif %}
             <ul class="links">
             <h4>Menu</h4>
             <li>
@@ -103,7 +110,6 @@
         </section>
         <!-- ==================== End Sidebar ==================== -->
 
-    {% endif %}
     <!-- Contenu -->
     <main class="middle">
         {% block Profile_boutique %}
@@ -119,6 +125,8 @@
     <script src="{% static 'assets/ressources/scripts/theme.js' %}"></script>
     <script src="{% static 'assets/ressources/scripts/sidebar-right.js' %}"></script>
     <script src="{% static 'assets/ressources/scripts/lightbox-plus-jquery.min.js' %}"></script>
-    <!-- <script src="{% static 'assets/algos/scripts/secrete.js' %}"></script> -->
+    <script src="{% static 'assets/algos/scripts/secrete.js' %}"></script>
+    <script src="{% static 'assets/ressources/scripts/Retour.js' %}"></script>
+    
 </body>
 </html>

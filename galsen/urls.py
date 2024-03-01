@@ -3,7 +3,7 @@ from django.urls import path
 from galsen.views import log_in, register, log_out
 
 # ========== Formulaires Posts ===================
-from galsen.views import create_post, create_job
+from galsen.views import create_post, create_job, create_even
 
 # ========== Profiles ===================
 from galsen.views import Per_profile, En_profile, En_job, En_Gestion_Boutique, Ec_profile, Ec_job
@@ -18,7 +18,7 @@ from galsen.views import Ec_posts, Ec_personnel, Ec_entreprise, Ec_boutique
 from galsen.views import Ad_posts, Ad_personnel, Ad_ecole, Ad_entreprise, Ad_job, Ad_boutique
 
 # ========== Details: Personnels, Entreprise, Ecole ===================
-from .views import PersonnelDetails, EcoleDetails, EntrepriseDetails, update_post
+from galsen.views import PersonnelDetails, EcoleDetails, EntrepriseDetails, update_post
 
 # ========== Update Statu: Personnels, Entreprise, Ecole ===================
 from galsen.views import update, update_profile, update_banner, profile
@@ -26,14 +26,22 @@ from galsen.views import update, update_profile, update_banner, profile
 # ========== Les Commentaires: Post et Les Réponses:Commentaires ===================
 from galsen.views import post_comments, comment_responses
 
+# ========== Les Followers: Les Likes ===================
+from galsen.views import  AddDislike, AddLikes
+# , RemoveFollower, SharedPosteVue, sharePoste, AddFollower
+
 from . import views
 
 
 
 urlpatterns = [
-    # ========== Les Commentaires ===================
+    # ========== Les Followers: Les Commentaires ===================
     path('post/<int:post_id>/comments/', post_comments, name='post_comments'),
     path('comment/<int:comment_id>/responses/', comment_responses, name='comment_responses'),
+    
+    # ========== Les Followers: Les Likes, Les Shares ===================
+    path('post/<int:pk>/like',AddLikes.as_view(),name='likes'),
+    path('post/<int:pk>/dislike',AddDislike.as_view(),name='dislike'),
     
     # ========== Details: Personnels, Entreprise, Ecole ===================
     path('personnel/<int:pk>/', PersonnelDetails.as_view(), name='personnel_details'),
@@ -60,6 +68,7 @@ urlpatterns = [
     # ========== Formulaires Posts ===================
     path('post', create_post, name = 'post'),
     path('job', create_job, name = 'job'),
+    path('even', create_even, name = 'even'),
     
     # ========== Profiles ===================
         # ========== Profiles Personnels ===================

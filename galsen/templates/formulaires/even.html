@@ -1,0 +1,63 @@
+{% extends 'formulaires/layouts/base.html' %}
+
+{% block Base %}
+{% load static %}
+<form method="post" action="{% url 'post' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="card">
+        <center>
+            <div class="cover">
+                <input type="file" id="file-input" accept="image/png, image/jpeg" name="image" required onchange="preview()">
+                <label for="file-input">
+                    <i class="fa fa-upload"></i> &nbsp; Choisir une Photo
+                </label>
+                <p id="num-of-files">Image Even</p>
+                <div id="images"></div>
+            </div>
+        </center>
+    </div>
+
+    <div class="card" style="display: none;">
+        <div class="input-group">
+            <select name="categories">
+                <option value="even"> Even </option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="input-group">
+            <i class="fa fa-edit"></i>
+            <input id="tag" type="text" class="form-control" name="tag_post" required autocomplete="name" placeholder="citer des tags séparés par des ;">
+            <span class="bar"></span>
+        </div>
+    </div>
+
+    <textarea name="contenu_post" id="contents" cols="30" rows="10" class="texta" required></textarea>
+
+    <!-- Nouvelle section pour les vidéos -->
+    <div class="card video">
+        <center>
+            <div class="">
+                <input type="file" id="video-input" accept="video/*" name="video" onchange="previewVideo()">
+                <label for="video-input">
+                    <i class="fa fa-upload"></i> &nbsp; Choisir une ou plusieurs Vidéos
+                </label>
+                <p id="num-of-videos">Vidéos Even</p>
+                <div id="videos"></div>
+            </div>
+        </center>
+        <progress id="video-progress" value="0" max="100"></progress>
+    </div>
+
+    <script src="{% static 'assets/ckeditor/ckeditor.js' %}"></script>
+    <script>
+        CKEDITOR.replace("contenu_post");
+    </script>
+    
+    <div class="button">
+        <button type="submit"> Poster </button>
+    </div>
+</form>
+{% endblock %}

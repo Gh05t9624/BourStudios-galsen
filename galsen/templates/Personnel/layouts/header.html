@@ -33,9 +33,9 @@
             <!-- ===== Img Profile ===== -->
             <a href="per_profile"> 
                 {% if user.profile_image and user.profile_image.url %}
-                    <img src="{{ user.profile_image.url }}" class="nav_img">
+                    <img src="{{ user.profile_image.url }}" class="nav_img enligne">
                 {% else %}
-                    <img src="{% static 'assets/default/user.png' %}"class="nav_img">
+                    <img src="{% static 'assets/default/user.png' %}"class="nav_img enligne">
                 {% endif %}
             </a>
 
@@ -197,6 +197,7 @@
     <script src="{% static 'assets/ressources/scripts/post.js' %}"></script>
     <script src="{% static 'assets/ressources/scripts/theme.js' %}"></script>
     <script src="{% static 'assets/ressources/scripts/lightbox-plus-jquery.min.js' %}"></script>
-    <script src="{% static 'assets/algos/scripts/secrete.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script src="{% static 'assets/algos/scripts/secrete.js' %}"></script> -->
 </body>
 </html>

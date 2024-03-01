@@ -81,6 +81,14 @@ class Post(models.Model):
     categories = models.CharField(max_length=255, choices=CATEGORIES, default='poste')
     session_info = models.CharField(max_length=255, null=True, blank=True)
     date_creation_post = models.DateTimeField(auto_now_add=True)
+    like_post = models.ManyToManyField(CustomUser, blank=True, related_name="likes")
+    dislike = models.ManyToManyField(CustomUser, blank=True, related_name='dislikes')
+    shared_boby = models.TextField(blank=True, null=True)
+    share_on = models.DateTimeField(blank=True, null=True)
+    shared_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name='+')
+    
+    class Meta:
+        ordering = ['-date_creation_post', '-share_on']
 
     @property
     def nombre_commentaire(self):

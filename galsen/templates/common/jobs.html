@@ -54,16 +54,24 @@
 
         <a href="#" class="users">
             <div class="couverture">
-                <img src="{{ job.user.banner_image.url}}" alt="">
+                {% if job.user.bannner_image and job.user.banner_image.url %}
+                        <img src="{{ job.user.banner_image.url}}">
+                    {% else %}
+                        <img src="{% static 'assets/default/user.png' %}">
+                {% endif %}
             </div>
             <div class="user_profile">
-                <img src="{{ job.user.profile_image.url}}">
+                {% if job.user.profile_image and job.user.profile_image.url %}
+                        <img src="{{ job.user.profile_image.url}}" class="enligne">
+                    {% else %}
+                        <img src="{% static 'assets/default/user.png' %}" class="enligne">
+                {% endif %}
                 <div class="name_job_country">
                     <h3 class="name">{{ job.title|safe }}</h3>
                     <h4 class="job">
                         <i class="fa fa-handshake-o danger"></i>
                         <span>|</span>
-                        {{ job.contenu_job|truncatewords_html:7 }}
+                        {{ job.contenu_job|truncatewords_html:1 }}
                     </h4>
                     <h5 class="country">
                         <i class="fa fa-map-marker text-muted"></i>

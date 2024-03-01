@@ -1,4 +1,7 @@
 from django.http import HttpResponse
+from django.utils import timezone
+from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 import os
 import time
@@ -11,7 +14,7 @@ from django.contrib import messages
 from .decorators import role_required
 
 from .models import CustomUser, Post, MediasPost, Job, Boutique, Commentaire, Reponse
-from django.views.generic import DetailView
+from django.views.generic import DetailView, View
 from galsen.utils import obtenir_marque_dispositif
 from django.http import JsonResponse  
 
@@ -260,6 +263,47 @@ def create_post(request):
     
     return render(request, 'formulaires/post.html')
 
+# ========== Formulaires Even ===================
+@role_required(['admin', 'ecole', 'entreprise'])
+def create_even(request):
+    if request.method == 'POST':
+        contenu_post = request.POST.get('contenu_post')
+        tag_post = request.POST.get('tag_post')
+        categories = request.POST.get('categories')
+        image_file = request.FILES.get('image')
+        video = request.FILES.get('video')
+        
+        # Obtenez les informations de session actuelles
+        session_info = obtenir_marque_dispositif(request)
+
+        # Créez un nouveau post avec les informations de session
+        new_post = Post.objects.create(
+            user=request.user,
+            contenu_post=contenu_post,
+            categories=categories,
+            tag_post=tag_post,
+            video=video,
+            session_info=session_info
+        )
+
+        if image_file:
+            MediasPost.objects.create(
+                post=new_post,
+                image=image_file
+            )
+    
+        user_role = request.user.rôle
+        
+        if user_role == 'admin':
+            return redirect('Ad_posts')
+        elif user_role == 'personnel':
+            return redirect('Per_posts')
+        elif user_role == 'ecole':
+            return redirect('Ec_posts')
+        elif user_role == 'entreprise':
+            return redirect('En_posts')
+    
+    return render(request, 'formulaires/even.html')
 
 @role_required(['admin','personnel', 'ecole', 'entreprise'])
 def create_job(request):
@@ -398,7 +442,7 @@ def Per_profile(request):
     return render(request, 'Personnel/profiles/mon_profile/post.html', {'CustomUser': CustomUser})
 
 
-# ========== Profiles Entreprises ===================
+        # ========== Profiles Entreprises ===================
 @role_required(['entreprise'])
 def En_profile(request):
     CustomUser = request.user
@@ -422,8 +466,9 @@ def En_Gestion_Boutique(request):
         # Maintenant, tu peux utiliser user_boutique dans ton contexte pour le rendre disponible dans ton template
         context = {'user_boutique': user_boutique}
         return render(request, 'Entreprise/profiles/mon_profile/boutique.html', context)
+# Break
 
-# ========== Profiles Ecole ===================
+        # ========== Profiles Ecole ===================
 @role_required(['ecole'])
 def Ec_profile(request):
     CustomUser = request.user
@@ -467,6 +512,71 @@ def comment_responses(request, comment_id):
     comment = get_object_or_404(Commentaire, id=comment_id)
     responses = Reponse.objects.filter(commentaire_id=comment.id)
     return render(request, 'Commentaire/response.html', {'comment': comment, 'responses': responses})
+
+# ========== Les Followers: Les Likes, Les Dislikes, Les Shares ===================
+class AddLikes(LoginRequiredMixin, View):
+    def post(self, request, pk, *args,  **kwargs):
+        post = Post.objects.get(pk=pk)
+        is_dislike = False
+        for dislike in post.dislike.all():
+            if dislike == request.user:
+                is_dislike = True
+                break
+        if is_dislike:
+            post.dislike.remove(request.user)
+
+        is_like = False
+        for like in post.like_post.all():
+            if like == request.user:
+                is_like = True
+                break
+        if not is_like:
+            post.like_post.add(request.user)
+        if is_like:
+            post.like_post.remove(request.user)
+        
+        next = request.POST.get('next', 'common/posts.html')
+        return HttpResponseRedirect(next)
+
+
+class AddFollower(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        profile = CustomUser.objects.get(pk=pk)
+        profile.followers.add(request.user)
+
+        return redirect('profile', pk=profile.pk)
+
+class RemoveFollower(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        profile = CustomUser.objects.get(pk=pk)
+        profile.followers.remove(request.user)
+
+        return redirect('profile', pk=profile.pk)
+
+class AddDislike(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        post = Post.objects.get(pk=pk)
+
+        is_like = False
+        for like in post.like_post.all():
+            if like == request.user:
+                is_like = True
+                break
+        if is_like:
+            post.like_post.remove(request.user)
+
+        is_dislike = False
+        for dislike in post.dislike.all():
+            if dislike == request.user:
+                is_dislike = True
+        if not is_dislike:
+            post.dislike.add(request.user)
+        
+        if is_dislike:
+            post.dislike.remove(request.user)
+
+        next = request.POST.get('next', '/common/posts.html')
+        return HttpResponseRedirect(next)
 
 ''' =========== personnels ========= '''
 @role_required(['personnel'])

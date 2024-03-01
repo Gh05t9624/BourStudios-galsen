@@ -57,9 +57,9 @@
                 <a href="#" class="user_infos">
                     <div class="user_Photo">
                         {% if post.user.profile_image and post.user.profile_image.url %}
-                            <img src="{{ post.user.profile_image.url}}">
+                            <img src="{{ post.user.profile_image.url}}" class="enligne">
                         {% else %}
-                            <img src="{% static 'assets/default/user.png' %}">
+                            <img src="{% static 'assets/default/user.png' %}" class="enligne">
                         {% endif %}
                     </div>
                     <div class="user_details">
@@ -126,16 +126,16 @@
             <div class="infos_followings">
                 <section class="like">
                     <a href="#">
-                        <i class="fa fa-thumbs-up danger"></i>
+                        <i class="fa fa-thumbs-up primary"></i>
                         <i class="text"> Aimé par</i> 
-                        <b class="primary">8 000</b>
-                        <i class="text">membres. &nbsp;</i>
+                        <b class="primary"> {{ post.like_post.count}}</b>
+                        <i class="text">membre(s). &nbsp;</i>
                     </a>
                 </section>
     
                 <section class="shares">
                     <a href="#">
-                        <i class="fa fa-share-alt danger"></i>
+                        <i class="fa fa-share-alt primary"></i>
                         <i class="text">Et partagé par</i> 
                         <b class="primary">8 000</b>
                         <i class="text">membres.</i>
@@ -144,10 +144,19 @@
             </div>
             
             <section class="followers">
-                <a href="#" class="like-btn" onclick="toggleLike()">
-                    <span class="like-icon" id="likeIcon">
-                        <i class="fa fa-thumbs-up" ></i>
-                    </span>
+                <a class="like-btn" onclick="toggleLike()">
+                    <form method="POST" action="{% url 'likes' post.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name='next' value='{{ request.path }}'></input>
+                        <button type="submit" class="button-like">
+                            <span class="like-icon" id="likeIcon{{ post.pk }}">
+                                <i class="fa fa-thumbs-up"></i>
+                                <b class="number-like">
+                                    {{ post.like_post.count }}
+                                </b>
+                            </span>
+                        </button>
+                    </form>
                 </a>
     
                 <a href="{% url 'post_comments' post.id %}">
@@ -162,12 +171,13 @@
                     </i>
                 </a>
     
-                <a href="#" id="pop-share">
+                <a>
                     <i class="fa fa-share-alt"></i>
                 </a>
+
             </section>
         </section>
 
     {% endfor %}
-
+    
 </section>

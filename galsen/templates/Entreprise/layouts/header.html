@@ -33,9 +33,9 @@
             <!-- ===== Img Profile ===== -->
             <a href="en_profile"> 
                 {% if user.profile_image and user.profile_image.url %}
-                    <img src="{{ user.profile_image.url }}" class="nav_img">
+                    <img src="{{ user.profile_image.url }}" class="nav_img enligne">
                 {% else %}
-                    <img src="{% static 'assets/default/user.png' %}"class="nav_img">
+                    <img src="{% static 'assets/default/user.png' %}"class="nav_img enligne">
                 {% endif %}
             </a>
 
@@ -135,7 +135,7 @@
                             <span class="nab_name"> Poster un Offre </span>
                         </a>
 
-                        <a href="#" class="nab_link nabtop active">
+                        <a href="even" class="nab_link nabtop active">
                             <img src="{% static 'assets/categories/evens.png' %}" class="nab_icon">
                             <span class="nab_name"> Poster un événement </span>
                         </a>

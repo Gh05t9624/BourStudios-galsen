@@ -60,9 +60,9 @@
             </div>
             <div class="user_profile">
                 {% if CustomUsers.profile_image and CustomUsers.profile_image.url %}
-                    <img src="{{ CustomUsers.profile_image.url }}">
+                    <img src="{{ CustomUsers.profile_image.url }}" class="enligne">
                 {% else %}
-                    <img src="{% static 'assets/default/user.png' %}">
+                    <img src="{% static 'assets/default/user.png' %}" class="enligne">
                 {% endif %}
                 <div class="name_job_country">
                     <h3 class="name">{{ CustomUsers.first_name }} {{ CustomUsers.last_name }}</h3>

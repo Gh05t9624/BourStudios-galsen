@@ -3,7 +3,7 @@
 {% if user_boutique %}
     <section class="image_profile">
         <div>
-            {% if user_boutique.banner_image and user_boutiquee.banner_image.url %}
+            {% if user_boutique.banner_image and user_boutique.banner_image.url %}
                 <a href="{{ user_boutique.banner_image.url }}"  data-lightbox="mygallery" class="banner">
                     <img src=" {{ user_boutique.banner_image.url }}" alt="">
                 </a>
