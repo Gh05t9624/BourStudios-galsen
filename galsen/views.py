@@ -515,69 +515,76 @@ def comment_responses(request, comment_id):
 
 # ========== Les Followers: Les Likes, Les Dislikes, Les Shares ===================
 class AddLikes(LoginRequiredMixin, View):
-    def post(self, request, pk, *args,  **kwargs):
-        post = Post.objects.get(pk=pk)
-        is_dislike = False
-        for dislike in post.dislike.all():
-            if dislike == request.user:
-                is_dislike = True
-                break
+    def post(self, request, pk, *args, **kwargs):
+        post = get_object_or_404(Post, pk=pk)
+
+        # Vérifier si l'utilisateur a déjà aimé ou n'aime pas le poste
+        is_dislike = post.dislike.filter(pk=request.user.pk).exists()
+        is_like = post.like_post.filter(pk=request.user.pk).exists()
+
+        # Si l'utilisateur n'aime pas le poste, le retirer de la liste des dislikes
         if is_dislike:
             post.dislike.remove(request.user)
 
-        is_like = False
-        for like in post.like_post.all():
-            if like == request.user:
-                is_like = True
-                break
+        # Si l'utilisateur n'a pas déjà aimé le poste, l'ajouter aux likes
         if not is_like:
             post.like_post.add(request.user)
-        if is_like:
+            like_icon = '<i class="fa fa-thumbs-up primary"></i>'
+        # Si l'utilisateur a déjà aimé le poste, le retirer des likes
+        else:
             post.like_post.remove(request.user)
+            like_icon = '<i class="fa fa-thumbs-up"></i>'
+
+        # Renvoyer les informations mises à jour
+        response_data = {
+            'like_count': post.like_post.count(),
+            'like_icon': like_icon,
+        }
         
-        next = request.POST.get('next', 'common/posts.html')
-        return HttpResponseRedirect(next)
 
 
 class AddFollower(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
-        profile = CustomUser.objects.get(pk=pk)
+        profile = get_object_or_404(CustomUser, pk=pk)
         profile.followers.add(request.user)
-
-        return redirect('profile', pk=profile.pk)
+        return JsonResponse({'success': True})
 
 class RemoveFollower(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
-        profile = CustomUser.objects.get(pk=pk)
+        profile = get_object_or_404(CustomUser, pk=pk)
         profile.followers.remove(request.user)
-
-        return redirect('profile', pk=profile.pk)
+        return JsonResponse({'success': True})
 
 class AddDislike(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
-        post = Post.objects.get(pk=pk)
+        post = get_object_or_404(Post, pk=pk)
 
-        is_like = False
-        for like in post.like_post.all():
-            if like == request.user:
-                is_like = True
-                break
+        # Vérifier si l'utilisateur a déjà aimé ou n'aime pas le poste
+        is_like = post.like_post.filter(pk=request.user.pk).exists()
+        is_dislike = post.dislike.filter(pk=request.user.pk).exists()
+
+        # Si l'utilisateur a déjà aimé le poste, le retirer de la liste des likes
         if is_like:
             post.like_post.remove(request.user)
 
-        is_dislike = False
-        for dislike in post.dislike.all():
-            if dislike == request.user:
-                is_dislike = True
+        # Si l'utilisateur n'a pas déjà détesté le poste, l'ajouter aux dislikes
         if not is_dislike:
             post.dislike.add(request.user)
-        
-        if is_dislike:
+            dislike_icon = '<i class="fa fa-thumbs-down primary"></i>'
+        # Si l'utilisateur a déjà détesté le poste, le retirer des dislikes
+        else:
             post.dislike.remove(request.user)
+            dislike_icon = '<i class="fa fa-thumbs-down"></i>'
 
-        next = request.POST.get('next', '/common/posts.html')
-        return HttpResponseRedirect(next)
-
+        # Renvoyer les informations mises à jour
+        response_data = {
+            'dislike_count': post.dislike.count(),
+            'dislike_icon': dislike_icon,
+        }
+        
+        # Retourner une réponse JSON
+        
+    
 ''' =========== personnels ========= '''
 @role_required(['personnel'])
 def Per_posts(request):

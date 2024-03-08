@@ -75,15 +75,66 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     });
 
+// Like
+$(document).ready(function() {
+    $('.button-like').click(function(event) {
+        event.preventDefault(); // Empêcher le comportement par défaut du formulaire
+        
+        var formId = $(this).closest('form').attr('id');
+        var postId = formId.split('-')[2];
+        var formData = $('#' + formId).serialize(); // Sérialiser les données du formulaire
+        
+        $.ajax({
+            url: $('#' + formId).attr('action'),
+            method: 'POST',
+            data: formData,
+            success: function(data) {
+                // Mettez à jour l'interface utilisateur en fonction des données renvoyées par le serveur
+                $('#likeIcon' + postId).html(data.like_icon);
+                $('.number-like').html(data.like_count);
+            }
+        });
+    });
+
+    $('.button-dislike').click(function(event) {
+        event.preventDefault(); // Empêcher le comportement par défaut du formulaire
+        
+        var formId = $(this).closest('form').attr('id');
+        var postId = formId.split('-')[2];
+        var formData = $('#' + formId).serialize(); // Sérialiser les données du formulaire
+        
+        $.ajax({
+            url: $('#' + formId).attr('action'),
+            method: 'POST',
+            data: formData,
+            success: function(data) {
+                // Mettez à jour l'interface utilisateur en fonction des données renvoyées par le serveur
+                $('#dislikeIcon' + postId).html(data.dislike_icon);
+                $('.number-dislike').html(data.dislike_count);
+            }
+        });
+    });
+});
+
+
  // partage
- function shareToggle(parent_id) {
-    const row = document.getElementById(parent_id);
-
-    if (row.classList.contains('d-none')) {
-        row.classList.remove('d-none');
-    } else {
-        row.classList.add('d-none');
-    }
-}
-
-// Like Button
+document.addEventListener("DOMContentLoaded", function() {
+    const shareButton = document.getElementById("shareButton");
+    const popup = document.getElementById("popup");
+    const closePopup = document.getElementById("closePopup");
+  
+    shareButton.addEventListener("click", function() {
+      popup.style.display = "block";
+    });
+  
+    closePopup.addEventListener("click", function() {
+      popup.style.display = "none";
+    });
+  
+    window.addEventListener("click", function(event) {
+      if (event.target == popup) {
+        popup.style.display = "none";
+      }
+    });
+  });
+  

@@ -142,18 +142,24 @@
                     </a>
                 </section>
             </div>
-            
+
             <section class="followers">
                 <a class="like-btn" onclick="toggleLike()">
-                    <form method="POST" action="{% url 'likes' post.pk %}">
+                    <form id="like-form-{{ post.pk }}" method="POST" action="{% url 'likes' post.pk %}">
                         {% csrf_token %}
-                        <input type="hidden" name='next' value='{{ request.path }}'></input>
+                        <input type="hidden" name="next" value="{{ request.path }}">
                         <button type="submit" class="button-like">
                             <span class="like-icon" id="likeIcon{{ post.pk }}">
-                                <i class="fa fa-thumbs-up"></i>
-                                <b class="number-like">
-                                    {{ post.like_post.count }}
-                                </b>
+                                {% if user.is_authenticated %}
+                                    {% if request.user in post.like_post.all %}
+                                        <i class="fa fa-thumbs-up primary"></i>
+                                    {% else %}
+                                        <i class="fa fa-thumbs-up"></i>
+                                    {% endif %}
+                                {% else %}
+                                    <i class="fa fa-thumbs-up"></i>
+                                {% endif %}
+                                <b class="number-like">{{ post.like_post.count }}</b>
                             </span>
                         </button>
                     </form>
@@ -171,7 +177,7 @@
                     </i>
                 </a>
     
-                <a>
+                <a id="shareButton">
                     <i class="fa fa-share-alt"></i>
                 </a>
 
@@ -180,4 +186,26 @@
 
     {% endfor %}
     
+</section>
+
+<section class="popup" id="popup">
+    <div class="content-popup">
+        <span  class="close" id="closePopup">&times;</span>
+
+        <h2>Partager sur:</h2>
+
+        <a href="whatsapp://send?text=Votre%20message%20ici" class="fa fa-whatsapp whatsapp"><br><span>Whatsapp</span></a>
+
+        <a href="https://www.facebook.com/sharer/sharer.php?u=URL_DU_CONTENU" class="fa fa-facebook facebook"><br><span>Facebook</span></a>
+
+        <a href="https://t.me/share/url=URL_DU_CONTENU&text=VOTRE_TEXTE" class="fa fa-telegram telegram"><br><span>Telegram</span></a>
+
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=URL_DU_CONTENU" class="fa fa-linkedin linkedin"><br><span>LinkedIn</span></a>
+
+        <a href="https://www.pinterest.com/pin/create/button/?url=URL_DU_CONTENU&description=VOTRE_DESCRIPTION" class="fa fa-pinterest pinterest"><br><span>Pinterest</span></a>
+
+        <label for="#" class="fa fa-link link"><br><span>Copy Link</span></label>
+
+    </div>
+
 </section>

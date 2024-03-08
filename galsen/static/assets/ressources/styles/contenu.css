@@ -11,7 +11,7 @@
   --text-color-light: hsl(var(--hue-color), 12%, 65%);
   --container-color: #fff;
   --body-color: hsl(var(--hue-color), 24%, 94%);
-  --color-danger: hsl(0, 95%, 65%);
+  --color-danger: hwb(0 32% 2%);
 
   --color-primary-light: 0 0.8rem 0.8rem rgba(71, 7, 234, 0.2);
   --color-danger-light: 0 0.8rem 0.8rem rgba(255, 67, 54, 0.2);
@@ -340,6 +340,7 @@ body {
     color: var(--title-color);
     background: var(--body-color);
     box-shadow: 0 0 0.1rem var(--title-color);
+    cursor: pointer;
 }
 
 button.button-like
@@ -590,6 +591,107 @@ section.professionnals.gallery.mon_profil
 {
     width: 100%;
 }
+
+.popup 
+{
+    display: none;
+    position: fixed;
+    width: 370px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--body-color);
+    box-shadow: 0.8rem 0.8rem 0.8rem 0.8rem rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    border: 1px solid #299bd5;
+    padding: 20px;
+    z-index: 1000;
+    transition: .1s ease-in-out;
+}
+
+.close 
+{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--title-color);
+    cursor: pointer;
+}
+
+.content-popup h2
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #299bd5;
+}
+
+.content-popup h2::before
+{
+    position: relative;
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: #299bd5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 16%;
+    top: 16px;
+}
+
+.content-popup a, .content-popup label
+{
+    list-style: none;
+    text-decoration: none;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 30px;
+    margin: 15px;
+}
+
+.content-popup a span, .content-popup label span
+{
+    font-size: 10px;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.whatsapp
+{
+    color: #25D366;
+}
+
+.facebook
+{
+    color: #2364f0;
+}
+
+.telegram
+{
+    color: #0088cc;
+}
+
+.linkedin
+{
+    color: #0077b5;
+}
+
+.pinterest
+{
+    color: #C8232C;
+}
+
+.link
+{
+    color: grey;
+}
+
 
 /* ================ Responsive ================== */
 /* ============ Version MacBook ============= */
