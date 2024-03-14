@@ -49,8 +49,11 @@
 </section>
 
 <section class="posts professionnals gallery">
-    <ul class="images">
-        {% for produit in produits %}
+    {% if produits %}
+                    
+        <ul class="images">
+
+            {% for produit in produits %}
             <li class="card filter">
                 <a href="#">
                     <img src="{{ produit.mediasproduct_set.first.image.url }}" alt="Image du produit">
@@ -72,6 +75,10 @@
                     <button><i class="fa fa-download"></i></button>
                 </div>
             </li>
-        {% endfor %}
-    </ul>
+            {% endfor %}
+
+        </ul>
+    {% else %}
+        <p>Aucun produit disponible pour le moment.</p>
+    {% endif %}
 </section>
