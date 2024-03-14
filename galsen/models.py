@@ -59,7 +59,19 @@ class CustomUser(AbstractUser):
     genre = models.CharField(max_length=255, choices=GENRE, default='homme')
     situation_matrimoniale = models.CharField(max_length=20, choices=SITUATION_MATRIMONIALE, default='celibataire')
     
-class APropos(models.Model):
+    def get_absolute_url(self):
+        return reverse('a_propos_current_user')
+  
+class Profil(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    description = models.TextField()
+    
+class Experience(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    
+class Formation(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -162,7 +174,7 @@ class Product(models.Model):
     nom_produit = models.CharField(max_length=255)
     description = models.TextField()
     prix = models.DecimalField(max_digits=10, decimal_places=2)
-    quantite_stock = models.IntegerField()
+    quantite_stock = models.IntegerField(null=True, blank=True)
     fournisseur = models.CharField(max_length=255)
     date_creation = models.DateTimeField(auto_now_add=True)
     

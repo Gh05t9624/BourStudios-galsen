@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import CustomUser
-from .models import APropos
+from .models import Profil
+from .models import Experience
+from .models import Formation
 from .models import Abonnement
 from .models import Post
 from .models import MediasPost
@@ -16,7 +18,9 @@ from .models import ShareJob
 
 # Register your models here.
 admin.site.register(CustomUser)
-admin.site.register(APropos)
+admin.site.register(Profil)
+admin.site.register(Experience)
+admin.site.register(Formation)
 admin.site.register(Abonnement)
 admin.site.register(Post)
 admin.site.register(MediasPost)

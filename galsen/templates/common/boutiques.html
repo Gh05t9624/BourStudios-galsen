@@ -50,28 +50,28 @@
 
 <section class="posts professionnals gallery">
     <ul class="images">
-
-        <li class="card filter">
-            <a href="#">
-                <img src="{% static 'assets/delete/banner/test.JPG' %}" alt="img">
-            </a>
-            
-            <div class="details">
-                <div class="photographer">
-                    <i class="fa fa-camera"></i>
-                    <a href="#"> 
-                            <img src="{% static 'assets/delete/banner/test.JPG' %}" alt="Profile">
-                        <span>
-                            Shoes 
-                            <p class="danger">
-                                12/11/96
-                            </p>
-                        </span>
-                    </a>
+        {% for produit in produits %}
+            <li class="card filter">
+                <a href="#">
+                    <img src="{{ produit.mediasproduct_set.first.image.url }}" alt="Image du produit">
+                </a>
+                <div class="details">
+                    <div class="photographer">
+                        <i class="fa fa-camera"></i>
+                        <a href="#">
+                            <!-- Photo de profil de la boutique -->
+                            <img src="{{ user_boutique.photo_profil.url }}" alt="Profile">
+                            <span>
+                                {{ produit.nom_produit }}
+                                <p class="danger">
+                                    {{ produit.date_creation|date:"d/m/Y" }}
+                                </p>
+                            </span>
+                        </a>
+                    </div>
+                    <button><i class="fa fa-download"></i></button>
                 </div>
-                <button><i class="fa fa-download"></i></button>
-            </div>
-        </li>
-        
+            </li>
+        {% endfor %}
     </ul>
 </section>

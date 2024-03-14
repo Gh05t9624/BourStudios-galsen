@@ -54,7 +54,7 @@
 
         <section class="actuality">
             <section class="profile">
-                <a href="#" class="user_infos">
+                <a href="{% url 'user_detail' pk=post.user.id %}" class="user_infos">
                     <div class="user_Photo">
                         {% if post.user.profile_image and post.user.profile_image.url %}
                             <img src="{{ post.user.profile_image.url}}" class="enligne">

@@ -13,16 +13,65 @@ from django.core.exceptions import ValidationError
 from django.contrib import messages
 from .decorators import role_required
 
-from .models import CustomUser, Post, MediasPost, Job, Boutique, Commentaire, Reponse
+from .models import CustomUser, Post, MediasPost, Job, Boutique, Commentaire, Reponse, Product, MediasProduct, Profil, Experience, Formation
 from django.views.generic import DetailView, View
 from galsen.utils import obtenir_marque_dispositif
-from django.http import JsonResponse  
+from django.http import JsonResponse
+from django.db.models import Q
+
+
+# ========== Details: profil, A propos ===================
+def user_detail(request, pk):
+    user = get_object_or_404(CustomUser, pk=pk)
+    context = {}
+
+    
+    if user.rôle == 'personnel':
+        template_name = 'profiles/id/personnel.html'
+        context['personnel'] = user
+    elif user.rôle == 'entreprise':
+        template_name = 'profiles/id/entreprise.html'
+        context['entreprise'] = user
+    elif user.rôle == 'ecole':
+        template_name = 'profiles/id/ecole.html'
+        context['ecole'] = user
+    
+    return render(request, template_name, context)
+
+# break
+
+def get_or_none(model, **kwargs):
+    try:
+        return model.objects.get(**kwargs)
+    except model.DoesNotExist:
+        return None
+
+def a_propos_detail(request, user_id):
+    user = get_object_or_404(CustomUser, pk=user_id)
+    context = {'user': user}
+    
+    if user.rôle == 'personnel':
+        template_name = 'profiles/id/A_propos/cv_personnel.html'
+        context['profil'] = get_or_none(Profil, user=user)
+        context['experience'] = get_or_none(Experience, user=user)
+        context['formation'] = get_or_none(Formation, user=user)
+    elif user.rôle == 'entreprise':
+        template_name = 'profiles/id/A_propos/propos_entreprise.html'
+        # Ajoutez les données spécifiques à l'entreprise au besoin
+    elif user.rôle == 'ecole':
+        template_name = 'profiles/id/A_propos/propos_ecole.html'
+        # Ajoutez les données spécifiques à l'école au besoin
+    else:
+        # Gérer le cas où le rôle n'est pas reconnu
+        template_name = 'profiles/id/A_propos/default.html'
+    
+    return render(request, template_name, context)
 
 
 # ========== Details: personnels ===================
 class PersonnelDetails(DetailView):
     model = CustomUser
-    template_name = 'Personnel/profiles/public_profile/profile_id_personnel.html'
+    template_name = 'profiles/id/personnel.html'
     context_object_name = 'personnel'
 
     def get_context_data(self, **kwargs):
@@ -33,7 +82,7 @@ class PersonnelDetails(DetailView):
 # ========== Details: Ecole ===================
 class EcoleDetails(DetailView):
     model = CustomUser
-    template_name = 'Ecole/profiles/public_profile/profile_id_ecole.html'
+    template_name = 'profiles/id/ecole.html'
     context_object_name = 'ecole'
 
     def get_context_data(self, **kwargs):
@@ -44,7 +93,7 @@ class EcoleDetails(DetailView):
 # ========== Details: Entreprise ===================
 class EntrepriseDetails(DetailView):
     model = CustomUser
-    template_name = 'Entreprise/profiles/public_profile/profile_id_entreprise.html'
+    template_name = 'profiles/id/entreprise.html'
     context_object_name = 'entreprise'
 
     def get_context_data(self, **kwargs):
@@ -58,29 +107,23 @@ def update_post(request, id):
     medias_post = MediasPost.objects.filter(post=post).first()
 
     if request.method == 'POST':
-        # Traitez les données du formulaire et mettez à jour le post
         post.contenu_post = request.POST['contenu_post']
         post.tag_post = request.POST['tag_post']
         post.save()
 
-        # Traitez les médias
         new_image_file = request.FILES.get('image')
         new_video_file = request.FILES.get('video')
 
-        # Supprimez l'ancienne image si elle existe
         if medias_post and medias_post.image and os.path.exists(medias_post.image.path):
             medias_post.image.delete(save=False)
 
-        # Supprimez l'ancienne vidéo si elle existe
         if post.video and os.path.exists(post.video.path):
             post.video.delete(save=False)
 
-        # Mettez à jour la vidéo dans le modèle Post
         if new_video_file:
             post.video = new_video_file
         post.save()
 
-        # Créez ou mettez à jour l'image dans le modèle MediasPost
         if medias_post:
             if new_image_file:
                 medias_post.image = new_image_file
@@ -89,7 +132,7 @@ def update_post(request, id):
             if new_image_file:
                 MediasPost.objects.create(post=post, image=new_image_file)
 
-        user_role = request.user.rôle  # Utilisez 'rôle' selon votre modèle CustomUser
+        user_role = request.user.rôle  
         if user_role == 'admin':
             return redirect('Ad_profile')
         elif user_role == 'personnel':
@@ -107,7 +150,6 @@ def delete_post(request, id):
     post = get_object_or_404(Post, id=id)
     medias_post = MediasPost.objects.filter(post=post).first()
 
-    # Supprimez les fichiers associés au post (image et vidéo) s'ils existent
     if medias_post and medias_post.image and os.path.exists(medias_post.image.path):
         medias_post.image.delete()
 
@@ -115,14 +157,12 @@ def delete_post(request, id):
         # Ajoutez une pause pour laisser le temps au système de libérer le fichier
         time.sleep(1)
         
-        # Supprimez le fichier vidéo s'il existe
         if os.path.exists(post.video.path):
             post.video.delete()
 
-    # Supprimez le post
     post.delete()
 
-    user_role = request.user.rôle  # Utilisez 'rôle' selon le modèle CustomUser
+    user_role = request.user.rôle
     if user_role == 'admin':
         return redirect('Ad_profile')
     elif user_role == 'personnel':
@@ -167,7 +207,7 @@ def register(request):
         try:
             form.full_clean()  # Utilisez full_clean pour déclencher toutes les validations du formulaire
         except ValidationError as e:
-            # Traitez les erreurs ici, puis ajoutez-les au contexte du formulaire
+            
             for field, messages in e.message_dict.items():
                 form.add_error(field, messages)
         if form.is_valid():
@@ -183,6 +223,7 @@ def register(request):
 def profile(request):
     if request.method == 'POST':
         user = request.user
+        
         # Récupérer les données du formulaire POST
         pays = request.POST.get('pays')
         ville = request.POST.get('ville')
@@ -206,12 +247,10 @@ def profile(request):
         user.birthday = birthday
         
 
-        # Sauvegarder les modifications
         user.save()
 
         messages.success(request, 'Profil mis à jour avec succès.')
 
-        # Rediriger vers la page du profil ou une autre page souhaitée
         return redirect('login')
     return render(request, 'auth/profils.html')
 
@@ -332,6 +371,43 @@ def create_job(request):
     return render(request, 'formulaires/job.html')
 
 @role_required(['admin','personnel', 'ecole', 'entreprise'])
+def create_product(request):
+    if request.method == 'POST':
+        # Récupérer les données du formulaire
+        description = request.POST.get('description')
+        nom_produit = request.POST.get('nom_produit')
+        prix = request.POST.get('prix')
+        video = request.FILES.get('video')
+        image = request.FILES.get('image')
+        
+        # Récupérer l'utilisateur actuel
+        utilisateur = request.user
+        
+        # Récupérer la boutique associée à l'utilisateur actuel
+        boutique = Boutique.objects.get(user=utilisateur)
+        
+        # Créer un nouveau produit
+        new_product = Product.objects.create(
+            boutique=boutique,
+            description=description,
+            nom_produit=nom_produit,
+            prix=prix,
+            video=video
+        )
+        
+        # Si une image est fournie, créer un objet MediasProduct correspondant
+        if image:
+            MediasProduct.objects.create(
+                produit=new_product,
+                image=image
+            )
+        
+        # Rediriger l'utilisateur vers une autre page après la création du produit
+        return redirect('En_Gestion_Boutique')
+        
+    return render(request, 'formulaires/product.html')
+
+@role_required(['admin','personnel', 'ecole', 'entreprise'])
 def update(request):
     user_role = request.user.rôle
 
@@ -365,17 +441,29 @@ def update(request):
             user.indicatif_pays = indicatif
             user.number_phone = phone
 
-            # Sauvegarder les modifications
+            
             user.save()
 
             messages.success(request, 'Profil mis à jour avec succès.')
 
-            # Rediriger vers la page du profil ou une autre page souhaitée
+            
             return redirect('En_profile')
         return render(request, 'formulaires/update/entreprise_statut.html')
 
-    # Gérer le cas d'erreur ou de rôle inconnu
+    
     return render(request, 'path_vers_votre_template_d_erreur.html')
+
+@role_required(['admin','personnel', 'ecole', 'entreprise'])
+def a_propos(request):
+    user_role = request.user.rôle
+    
+    # Charger le template de mise à jour correspondant au rôle de l'utilisateur
+    if user_role == 'personnel':
+        return render(request, 'profiles/A_Propos/cv_personnel.html')
+    elif user_role == 'ecole':
+        return render(request, 'profiles/A_Propos/propos_ecole.html')
+    elif user_role == 'entreprise':
+        return render(request, 'profiles/A_Propos/propos_entreprise.html')
 
 @role_required(['admin','personnel', 'ecole', 'entreprise'])
 def update_profile(request):
@@ -402,9 +490,96 @@ def update_profile(request):
             return redirect('Ec_profile')
         elif user_role == 'entreprise':
             return redirect('En_profile')
-        # Rediriger vers la page de profil ou toute autre page appropriée
+        # Rediriger vers la page de profil appropriée
     else:
         return render(request, 'formulaires/update/update_profile.html')
+    
+# break
+
+# Update logo Boutique
+def update_logo_boutique(request):
+    if request.method == 'POST':
+        # Récupérer l'utilisateur actuellement connecté
+        user = request.user
+
+        # Récupérer la boutique associée à cet utilisateur
+        boutique = Boutique.objects.get(user=user)
+
+        # Récupérer l'image du formulaire
+        image = request.FILES.get('image')
+
+        # Mettre à jour la photo de profil de la boutique
+        if image:
+            # Supprimer l'ancienne image de la base de données et localement
+            if boutique.photo_profil:
+                old_image_path = boutique.photo_profil.path
+                boutique.photo_profil.delete(save=False)
+
+            # Enregistrer la nouvelle image dans la base de données
+            boutique.photo_profil = image
+            boutique.save()
+
+        # Rediriger vers une page de confirmation ou une autre vue
+        return redirect('En_Gestion_Boutique')
+
+    # Si la méthode de requête est GET, simplement renvoyer le formulaire HTML
+    return render(request, 'formulaires/update/update_logo_boutique.html')
+# break
+
+# Update Banner Boutique
+def update_banner_boutique(request):
+    if request.method == 'POST':
+        # Récupérer l'utilisateur actuellement connecté
+        user = request.user
+
+        # Récupérer la boutique associée à cet utilisateur
+        boutique = Boutique.objects.get(user=user)
+
+        # Récupérer l'image du formulaire
+        image = request.FILES.get('image')
+
+        # Mettre à jour la photo de profil de la boutique
+        if image:
+            # Supprimer l'ancienne image de la base de données et localement
+            if boutique.banner_image:
+                old_image_path = boutique.banner_image.path
+                boutique.banner_image.delete(save=False)
+
+            # Enregistrer la nouvelle image dans la base de données
+            boutique.banner_image = image
+            boutique.save()
+
+        # Rediriger vers une page de confirmation ou une autre vue
+        return redirect('En_Gestion_Boutique')
+
+    # Si la méthode de requête est GET, simplement renvoyer le formulaire HTML
+    return render(request, 'formulaires/update/update_banner_boutique.html')
+# break
+
+# Update Description Boutique
+def update_description_boutique(request):
+    if request.method == 'POST':
+        # Récupérer l'utilisateur actuellement connecté
+        user = request.user
+
+        # Récupérer la boutique associée à cet utilisateur
+        boutique = Boutique.objects.get(user=user)
+
+        
+        description = request.POST.get('description')
+
+        
+
+            # Enregistrer la nouvelle image dans la base de données
+        boutique.description = description
+        boutique.save()
+
+        # Rediriger vers une page de confirmation ou une autre vue
+        return redirect('En_Gestion_Boutique')
+
+    # Si la méthode de requête est GET, simplement renvoyer le formulaire HTML
+    return render(request, 'formulaires/update/update_description_boutique.html')
+# break
 
 @role_required(['admin','personnel', 'ecole', 'entreprise'])
 def update_banner(request):
@@ -434,50 +609,79 @@ def update_banner(request):
         # Rediriger vers la page de profil ou toute autre page appropriée
     else:
         return render(request, 'formulaires/update/update_banner.html')
+
 # ========== Profiles ===================
         # ========== Profiles personnels ===================
 @role_required(['personnel'])
 def Per_profile(request):
     CustomUser = request.user
-    return render(request, 'Personnel/profiles/mon_profile/post.html', {'CustomUser': CustomUser})
-
+    return render(request, 'profiles/mon_profile/personnel.html', {'CustomUser': CustomUser})
+# ========== Break ===================
 
         # ========== Profiles Entreprises ===================
 @role_required(['entreprise'])
 def En_profile(request):
     CustomUser = request.user
-    return render(request, 'Entreprise/profiles/mon_profile/post.html', {'CustomUser': CustomUser})
+    return render(request, 'profiles/mon_profile/entreprise_post.html', {'CustomUser': CustomUser})
 
 @role_required(['entreprise'])
 def En_job(request):
     CustomUser = request.user
-    return render(request, 'Entreprise/profiles/mon_profile/job.html', {'CustomUser': CustomUser})
+    return render(request, 'profiles/mon_profile/entreprise_job.html', {'CustomUser': CustomUser})
 
 @role_required(['entreprise'])
 def En_Gestion_Boutique(request):
-    if request.user.is_authenticated:
-        try:
-            # Récupère la boutique associée à l'utilisateur connecté
-            user_boutique = Boutique.objects.get(user=request.user)
-        except Boutique.DoesNotExist:
-            # Gérer le cas où la boutique n'existe pas
-            user_boutique = None
+    try:
+        # Récupère la boutique associée à l'utilisateur connecté
+        user_boutique = Boutique.objects.get(user=request.user)
+        
+        # Récupérer les produits associés à cette boutique
+        produits = user_boutique.product_set.all()
+        
+    except Boutique.DoesNotExist:
+        # Redirige vers la page 'auth/boutique.html' si la boutique n'existe pas
+        return render(request, 'auth/boutique.html')
 
-        # Maintenant, tu peux utiliser user_boutique dans ton contexte pour le rendre disponible dans ton template
-        context = {'user_boutique': user_boutique}
-        return render(request, 'Entreprise/profiles/mon_profile/boutique.html', context)
+    # Maintenant, tu peux utiliser user_boutique et produits dans ton contexte pour le rendre disponible dans ton template
+    context = {
+        'user_boutique': user_boutique,
+        'produits': produits
+    }
+    return render(request, 'profiles/mon_profile/boutique.html', context)
 # Break
+
+def boutique(request):
+    if request.method == 'POST':
+        # Récupère l'utilisateur connecté
+        user = request.user
+        
+        # Récupère les données du formulaire
+        nom_boutique = request.POST.get('nom_boutique')
+        devise_boutique = request.POST.get('devise_boutique')
+        
+        # Crée un nouvel objet Boutique
+        nouvelle_boutique = Boutique.objects.create(
+            user=user,
+            nom_boutique=nom_boutique,
+            devise_boutique=devise_boutique
+        )
+        
+        # Redirige vers la vue pour gérer la boutique
+        return redirect('En_Gestion_Boutique')
+        
+    return render(request, 'auth/boutique.html')
+# break
 
         # ========== Profiles Ecole ===================
 @role_required(['ecole'])
 def Ec_profile(request):
     CustomUser = request.user
-    return render(request, 'Ecole/profiles/mon_profile/post.html', {'CustomUser': CustomUser})
+    return render(request, 'profiles/mon_profile/ecole_post.html', {'CustomUser': CustomUser})
 
 @role_required(['ecole'])
 def Ec_job(request):
     CustomUser = request.user
-    return render(request, 'Ecole/profiles/mon_profile/job.html', {'CustomUser': CustomUser})
+    return render(request, 'profiles/mon_profile/ecole_job.html', {'CustomUser': CustomUser})
 
 # ========== Les commentaires: Posts ===================
 @role_required(['admin','personnel', 'ecole', 'entreprise'])
@@ -541,8 +745,6 @@ class AddLikes(LoginRequiredMixin, View):
             'like_icon': like_icon,
         }
         
-
-
 class AddFollower(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         profile = get_object_or_404(CustomUser, pk=pk)
@@ -600,7 +802,7 @@ def Per_posts(request):
     context = {
         'posts': posts,
     }
-    return render(request, 'personnel/post.html', context)
+    return render(request, 'users/personnel/post.html', context)
 
 @role_required(['personnel'])
 def Per_ecole(request):
@@ -612,7 +814,7 @@ def Per_ecole(request):
         'user': user
     }
     
-    return render(request, 'personnel/ecole.html', context)
+    return render(request, 'users/personnel/ecole.html', context)
 
 @role_required(['personnel'])
 def Per_entreprise(request):
@@ -624,7 +826,7 @@ def Per_entreprise(request):
         'user': user
     }
     
-    return render(request, 'Personnel/entreprise.html', context)
+    return render(request, 'users/Personnel/entreprise.html', context)
 
 @role_required(['personnel'])
 def Per_job(request):
@@ -636,7 +838,7 @@ def Per_job(request):
         'user': user
     }
     
-    return render(request, 'Personnel/job.html', context)
+    return render(request, 'users/Personnel/job.html', context)
 
 @role_required(['personnel'])
 def Per_boutique(request):
@@ -646,7 +848,7 @@ def Per_boutique(request):
         'user': user
     }
     
-    return render(request, 'Personnel/boutique.html', context)
+    return render(request, 'users/Personnel/boutique.html', context)
 
 
 ''' =========== Entreprises ========= '''
@@ -666,7 +868,7 @@ def En_posts(request):
         'user': user
     }
 
-    return render(request, 'Entreprise/post.html', context)
+    return render(request, 'users/Entreprise/post.html', context)
 
 @role_required(['entreprise'])
 def En_personnel(request):
@@ -678,7 +880,7 @@ def En_personnel(request):
         'user': user
     }
     
-    return render(request, 'Entreprise/personnel.html', context)
+    return render(request, 'users/Entreprise/personnel.html', context)
 
 @role_required(['entreprise'])
 def En_ecole(request):
@@ -690,17 +892,27 @@ def En_ecole(request):
         'user': user
     }
     
-    return render(request, 'Entreprise/ecole.html', context)
+    return render(request, 'users/Entreprise/ecole.html', context)
 
 @role_required(['entreprise'])
 def En_boutique(request):
-    user = request.user
-    
+    try:
+        # Récupère la boutique associée à l'utilisateur connecté
+        user_boutique = Boutique.objects.get(user=request.user)
+        
+        # Récupérer les produits associés à cette boutique
+        produits = user_boutique.product_set.all()
+        
+    except Boutique.DoesNotExist:
+        # Redirige vers une page d'erreur si la boutique n'existe pas
+        return render(request, 'erreur.html', {'message': "Boutique non trouvée."})
+
+    # Maintenant, tu peux utiliser user_boutique et produits dans ton contexte pour le rendre disponible dans ton template
     context = {
-        'user': user
+        'user_boutique': user_boutique,
+        'produits': produits
     }
-    
-    return render(request, 'Entreprise/boutique.html', context)
+    return render(request, 'users/Entreprise/boutique.html', context)
 
 
 ''' =========== Ecoles ========= '''
@@ -720,7 +932,7 @@ def Ec_posts(request):
         'user': user
     }
     
-    return render(request, 'Ecole/post.html', context)
+    return render(request, 'users/Ecole/post.html', context)
 
 @role_required(['ecole'])
 def Ec_personnel(request):
@@ -732,7 +944,7 @@ def Ec_personnel(request):
         'user' : user
     }
     
-    return render(request, 'Ecole/personnel.html', context)
+    return render(request, 'users/Ecole/personnel.html', context)
 
 @role_required(['ecole'])
 def Ec_entreprise(request):
@@ -743,7 +955,7 @@ def Ec_entreprise(request):
         'CustomUsers' : CustomUsers,
         'user' : user
     }
-    return render(request, 'Ecole/entreprise.html', context)
+    return render(request, 'users/Ecole/entreprise.html', context)
 
 @role_required(['ecole'])
 def Ec_boutique(request):
@@ -752,7 +964,7 @@ def Ec_boutique(request):
     context = {
         'user' : user
     }
-    return render(request, 'Ecole/boutique.html', context)
+    return render(request, 'users/Ecole/boutique.html', context)
 
 
 ''' =========== Admins ========= '''
@@ -767,7 +979,7 @@ def Ad_posts(request):
         'user': user
     }
     
-    return render(request, 'Admin/post.html', context)
+    return render(request, 'users/Admin/post.html', context)
 
 @role_required(['admin'])
 def Ad_personnel(request):
@@ -777,7 +989,7 @@ def Ad_personnel(request):
         'user': user
     }
     
-    return render(request, 'Admin/personnel.html', context)
+    return render(request, 'users/Admin/personnel.html', context)
 
 @role_required(['admin'])
 def Ad_ecole(request):
@@ -787,7 +999,7 @@ def Ad_ecole(request):
         'user': user
     }
     
-    return render(request, 'Admin/ecole.html', context)
+    return render(request, 'users/Admin/ecole.html', context)
 
 @role_required(['admin'])
 def Ad_entreprise(request):
@@ -796,7 +1008,7 @@ def Ad_entreprise(request):
     context = {
         'user': user
     }
-    return render(request, 'Admin/entreprise.html', context)
+    return render(request, 'users/Admin/entreprise.html', context)
 
 @role_required(['admin'])
 def Ad_job(request):
@@ -806,7 +1018,7 @@ def Ad_job(request):
         'user': user
     }
     
-    return render(request, 'Admin/job.html', context)
+    return render(request, 'users/Admin/job.html', context)
 
 @role_required(['admin'])
 def Ad_boutique(request):
@@ -816,4 +1028,4 @@ def Ad_boutique(request):
         'user': user
     }
     
-    return render(request, 'Admin/boutique.html', context)
+    return render(request, 'users/Admin/boutique.html', context)

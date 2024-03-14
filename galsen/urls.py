@@ -3,7 +3,7 @@ from django.urls import path
 from galsen.views import log_in, register, log_out
 
 # ========== Formulaires Posts ===================
-from galsen.views import create_post, create_job, create_even
+from galsen.views import create_post, create_job, create_even, create_product, a_propos
 
 # ========== Profiles ===================
 from galsen.views import Per_profile, En_profile, En_job, En_Gestion_Boutique, Ec_profile, Ec_job
@@ -21,7 +21,7 @@ from galsen.views import Ad_posts, Ad_personnel, Ad_ecole, Ad_entreprise, Ad_job
 from galsen.views import PersonnelDetails, EcoleDetails, EntrepriseDetails, update_post
 
 # ========== Update Statu: Personnels, Entreprise, Ecole ===================
-from galsen.views import update, update_profile, update_banner, profile
+from galsen.views import update, update_profile, update_banner, profile, boutique, update_logo_boutique, update_banner_boutique, update_description_boutique
 
 # ========== Les Commentaires: Post et Les Réponses:Commentaires ===================
 from galsen.views import post_comments, comment_responses
@@ -35,6 +35,9 @@ from . import views
 
 
 urlpatterns = [
+    # ========== A Propos ===================
+    path('a_propos', a_propos, name = 'a_propos'),
+    
     # ========== Les Followers: Les Commentaires ===================
     path('post/<int:post_id>/comments/', post_comments, name='post_comments'),
     path('comment/<int:comment_id>/responses/', comment_responses, name='comment_responses'),
@@ -43,21 +46,24 @@ urlpatterns = [
     path('post/<int:pk>/like',AddLikes.as_view(),name='likes'),
     path('post/<int:pk>/dislike',AddDislike.as_view(),name='dislike'),
     
-    # ========== Details: Personnels, Entreprise, Ecole ===================
+    # ========== Details: Profil, Personnels, Entreprise, Ecole ===================
     path('personnel/<int:pk>/', PersonnelDetails.as_view(), name='personnel_details'),
     path('ecole/<int:pk>/', EcoleDetails.as_view(), name='ecole_details'),
     path('entreprise/<int:pk>/', EntrepriseDetails.as_view(), name='entreprise_details'),
+    path('profiles/<int:pk>/', views.user_detail, name='user_detail'),
+    path('a_propos/<int:user_id>/', views.a_propos_detail, name='a_propos_detail'),
      
     # ========== Update Statu, Update Profile, Update Banner, Update Post, Update Job: Personnels, Entreprise, Ecole ===================
     path('update', update, name = 'update'),
     path('update_profile', update_profile, name = 'update_profile'),
     path('update_banner', update_banner, name = 'update_banner'),
     path('update_post/<int:id>/', update_post, name='update_post'),
+    path('update_logo_boutique', update_logo_boutique, name = 'update_logo_boutique'),
+    path('update_banner_boutique', update_banner_boutique, name = 'update_banner_boutique'),
+    path('update_description_boutique', update_description_boutique, name = 'update_description_boutique'),
     
     path('profil', profile, name = 'profil'),
-    
-    # ========== Supprimer: Posts, Jobs, Product ===================
-    path('delete_post/<int:id>/', views.delete_post, name='delete_post'),
+    path('boutique', boutique, name = 'boutique'),
 
      
     # ========== Authentification ==================
@@ -69,6 +75,10 @@ urlpatterns = [
     path('post', create_post, name = 'post'),
     path('job', create_job, name = 'job'),
     path('even', create_even, name = 'even'),
+    path('product', create_product, name = 'product'),
+    
+    # ========== Supprimer: Posts, Jobs, Product ===================
+    path('delete_post/<int:id>/', views.delete_post, name='delete_post'),
     
     # ========== Profiles ===================
         # ========== Profiles Personnels ===================
@@ -101,7 +111,7 @@ urlpatterns = [
         # =========== Ecoles ================
                 # ===== Les Pages =====
     path('ec_post', Ec_posts, name = 'Ec_posts'),
-    path('ec_personnel', Ec_personnel, name = 'Ec_Personnel'),
+    path('ec_personnel', Ec_personnel, name = 'Ec_personnel'),
     path('ec_entreprise', Ec_entreprise, name = 'Ec_entreprise'),
     path('ec_boutique', Ec_boutique, name = 'Ec_boutique'),
     
