@@ -76,15 +76,16 @@ body {
 
 .pubPolitique
 {
-    margin-top: 25px;
-    width: 74%;
-    height: 220px;
+    margin-top: 28px;
+    width: 77%;
+    height: 200px;
 }
 
 .sliderP img
 {
     width: 100%;
-    height: 150px;
+    height: 180px;
+    object-fit: fill;
 }
 
 .sliderRH img,

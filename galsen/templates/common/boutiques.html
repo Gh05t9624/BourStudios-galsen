@@ -9,28 +9,29 @@
     </form>
     
 </section>
+
 <section class="slider pubPolitique">
     <div class="sliderP">
         <a href="#">
-            <img src="{% static 'assets/delete/banner/banner.png' %}">
+            <img src="{% static 'assets/default/banner.png' %}">
         </a>
     </div>
 
     <div class="sliderP">
         <a href="#">
-            <img src="{% static 'assets/delete/banner/banner.png' %}">
+            <img src="{% static 'assets/default/banner3.jpeg' %}">
         </a>
     </div>
 
     <div class="sliderP">
         <a href="#">
-            <img src="{% static 'assets/delete/banner/banner.png' %}">
+            <img src="{% static 'assets/default/banner4.jpeg' %}">
         </a>
     </div>
 
     <div class="sliderP">
         <a href="#">
-            <img src="{% static 'assets/delete/banner/banner.png' %}">
+            <img src="{% static 'assets/default/banner5.jpg' %}">
         </a>
     </div>
 
@@ -60,25 +61,25 @@
                 </a>
                 <div class="details">
                     <div class="photographer">
-                        <i class="fa fa-camera"></i>
+                        <i>{{ produit.boutique.devise_money }}</i>
                         <a href="#">
                             <!-- Photo de profil de la boutique -->
-                            <img src="{{ user_boutique.photo_profil.url }}" alt="Profile">
-                            <span>
+                            <img src="{{ produit.boutique.photo_profil.url }}" alt="Profile">
+                            <span class="body">
                                 {{ produit.nom_produit }}
                                 <p class="danger">
-                                    {{ produit.date_creation|date:"d/m/Y" }}
+                                    <span class="primary">Poster le </span>{{ produit.date_creation }}
                                 </p>
                             </span>
                         </a>
                     </div>
-                    <button><i class="fa fa-download"></i></button>
+                    <button><i class="fa fa-money"></i> {{ produit.prix }} </button>
                 </div>
             </li>
             {% endfor %}
 
         </ul>
     {% else %}
-        <p>Aucun produit disponible pour le moment.</p>
-    {% endif %}
+        <p style="margin-top: 100px;">Aucun produit disponible pour le moment.</p>
+    {% endif %} 
 </section>

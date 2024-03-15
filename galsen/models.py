@@ -158,6 +158,7 @@ class Boutique(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     nom_boutique = models.CharField(max_length=255)
     devise_boutique = models.CharField(max_length=255)
+    devise_money = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField()
     photo_profil = models.ImageField(upload_to='boutique_profil/')
     banner_image = models.ImageField(upload_to='boutique_banner/')

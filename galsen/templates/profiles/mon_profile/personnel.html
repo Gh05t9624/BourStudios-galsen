@@ -230,7 +230,6 @@
                     </a>
                 </button>
 
-
                 {% for post in CustomUser.post_set.all|dictsortreversed:'date_creation_post' %}
                     <section class="actuality">
                         <section class="profile">
@@ -358,6 +357,7 @@
 
                     </section>
                 {% endfor %}
+                    
             </section>
     
             {% include 'users/Personnel/layouts/sidebar.html' %}

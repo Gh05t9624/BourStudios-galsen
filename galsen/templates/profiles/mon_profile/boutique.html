@@ -207,15 +207,15 @@
                             
                             <div class="details">
                                 <div class="photographer">
-                                    <i class="fa fa-camera"></i>
+                                    <i>{{ produit.boutique.devise_money }}</i>
                                     <a href="#">
                                         {% if user_boutique.photo_profil %} 
                                             <img src="{{ user_boutique.photo_profil.url }}" alt="Profile">
                                         {% endif %}
-                                        <span>
+                                        <span class="body">
                                             {{ produit.nom_produit }}
                                             <p class="danger">
-                                                {{ produit.date_creation }}
+                                                <span class="primary">Poster le </span>{{ produit.date_creation }}
                                             </p>
                                         </span>
                                     </a>

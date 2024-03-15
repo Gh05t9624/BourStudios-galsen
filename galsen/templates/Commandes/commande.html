@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Commande</title>
+
+        <link rel="stylesheet" href="{% static 'assets/ressources/styles/commande.css' %}">
+
+        <!-- Box Icone -->
+        <link rel="stylesheet" href="{% static 'assets/icones/font-awesome/css/font-awesome.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/icones/font-awesome/css/font-awesome.min.css' %}">
+
+    </head>
+    <body>
+        
+        <div class="container">
+            <div class="chat">
+
+                <div class="chat-header">
+                    <div class="profile">
+                        <div class="left">
+                            <a href="#">
+                                <i class="fa fa-arrow-left arrow"></i>
+                            </a>
+                            <img src="assets/images/pic-4.png" class="profile">
+                            <div class="details">
+                                <h2>Je vais à l'école...</h2>
+                                <span>Les commentaires...</span>
+                            </div>
+                        </div>
+                        <div class="right">
+
+                            <a href="#">
+                                <i class="fa fa-ellipsis-v icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-commande">
+                    <div class="chat-r">
+                        <div class="boutique gallery">
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat neque corporis temporibus rerum! Libero provident dolore perferendis, explicabo quasi tempora amet voluptates rem aperiam ex praesentium ratione culpa earum. Commodi.
+                            </p>
+                            <ul class="images">
+                                <li class="card">
+                                    <div class="product-comments">
+                                        <img src="assets/delete/banner/Antman.jpg" class="product">
+                                    </div>
+                                </li>
+
+                                <li class="card">
+                                    <div class="product-comments">
+                                        <img src="assets/delete/images/back1.jpg" class="product">
+                                    </div>
+                                </li>
+
+                                <li class="card">
+                                    <div class="product-comments">
+                                        <img src="assets/delete/banner/back4.jpg" class="product">
+                                    </div>
+                                </li>
+
+                                <li class="card">
+                                    <div class="product-comments">
+                                        <img src="assets/delete/banner/Antman.jpg" class="product">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        <div class="messages">
+                            <div class="message_client">
+                                <h3>
+                                    <img src="assets/delete/images/pic-4.png">
+                                    Oumar Thioubou
+                                </h3>
+                                <p>
+                                    <img src="assets/delete/images/Antman.jpg">
+                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Non tempora, voluptate sapiente doloribus eum saepe ipsa. Alias voluptatum ducimus quod consectetur cum ratione enim quae repellat? Pariatur, et quibusdam! Fuga?
+                                </p>
+                                <h5 class="danger">
+                                    12h 45mn
+                                </h5>
+                            </div>
+
+                            <div class="message_boutique">
+                                <h3>
+                                    <img src="assets/delete/images/pic-4.png">
+                                    Oumar Thioubou
+                                </h3>
+                                <p>
+                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Non tempora, voluptate sapiente doloribus eum saepe ipsa. Alias voluptatum ducimus quod consectetur cum ratione enim quae repellat? Pariatur, et quibusdam! Fuga?
+                                </p>
+                                <h5 class="primary">
+                                    12h 45mn
+                                </h5>
+                            </div>
+
+                            <div class="message_client">
+                                <h3>
+                                    <img src="assets/delete/images/pic-4.png">
+                                    Oumar Thioubou
+                                </h3>
+                                <p>
+                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Non tempora, voluptate sapiente doloribus eum saepe ipsa. Alias voluptatum ducimus quod consectetur cum ratione enim quae repellat? Pariatur, et quibusdam! Fuga?
+                                </p>
+                                <h5 class="danger">
+                                    12h 45mn
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-footer">
+                    <form class="forms" method="post" action="#" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div id="imagePreview" class="preview"></div>
+                        <input type="file" id="imageInput" name="image" accept="image/*" onchange="previewFiles('imageInput', 'imagePreview', 3)">
+                        <div class="left">
+                            <a class="emo" id="emojiButton">
+                                <i class="fa fa-smile-o"></i>
+                            </a>
+                            
+                            <textarea id="commentTextarea" spellcheck="false" placeholder="Votre commentaire..." name="contenu_commentaire" required></textarea>
+                            
+                            <emoji-picker for="commentTextarea"></emoji-picker>
+                            
+                        </div>
+                        
+                        <div class="right">
+                            <label for="imageInput">
+                                <img src="{% static 'assets/categories/gallery.svg' %}" alt="">
+                            </label>
+
+                            <button type="submit"><i class="fa fa-send"></i></button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+
+        <script src="{% static 'assets/ressources/scripts/chats.js' %}"></script>
+        <script src="{% static 'assets/ressources/scripts/theme.js' %}"></script> 
+        <script src="{% static 'assets/ressources/scripts/Retour.js' %}"></script>
+        <script src="{% static 'assets/algos/scripts/secrete.js' %}"></script>
+        <script type="module" src="{% static 'node_modules/emoji-picker-element/picker.js' %}" defer></script>
+
+    </body>
+</html>

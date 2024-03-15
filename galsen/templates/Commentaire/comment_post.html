@@ -47,41 +47,32 @@
 
                     {% for comment in comments %}
                         <div class="chat-r">
-                            <div class="mess mess-r">
-                                <span>
-                                    <a href="#"> 
-                                        {% if user.profile_image and user.profile_image.url %}
-                                            <img src="{{ comment.user.profile_image.url }}" class="auteur">
-                                        {% else %}
-                                            <img src="{% static 'assets/default/user.png' %}"class="auteur">
-                                        {% endif %}
-                                    </a>
-                                    <p>
-                                        <i class="black">{{ comment.user.first_name }} {{ comment.user.last_name }}:</i>
-                                
-                                            {% if comment.image %}
-                                                <img src="{{ comment.image.url }}" class="ImgComment">
-                                            {% endif %}
-                                       
-                                        <b>
-                                            {{ comment.contenu_commentaire }}
-                                        </b>
 
-                                        <span>{{ comment.date_creation }} | 
-                                            <a href="{% url 'comment_responses' comment.id %}" class="comment_or_response">
-                                                Répondre 
-                                                <span class="primary" style="font-weight: bold;">
-                                                    {% if response.nombre_responses > 1000 %}
-                                                        {{ response.nombre_responses|divisibleby:1000|floatformat:"0.1" }}k
-                                                    {% else %}
-                                                        {{ response.nombre_responses }}
-                                                    {% endif %}
-                                                </span>
-                                            </a>
-                                        </span>
-                                        <b><a href="#">Réaction: <img src="assets/images/pic-4.png" class="reaction"> <img src="assets/images/pic-4.png" class="reaction"> <img src="assets/images/pic-4.png" class="reaction"> <img src="assets/images/pic-4.png" class="reaction"></a> </b>
+                            <div class="comments">
+                                <div class="message_comment">
+                                    <h3>
+                                        <a href="{% url 'user_detail' pk=post.user.id %}">
+                                            {% if user.profile_images and user.profile_images.url %}
+                                            <img src="{{ comment.user.profile_images.url }}">
+                                            {% else %}
+                                                <img src="{% static 'assets/default/user.png' %}">
+                                            {% endif %}
+                                        </a>
+                                        {{ comment.user.first_name }} {{ comment.user.last_name }}
+                                    </h3>
+                                    <p>
+                                        {% if comment.image %}
+                                            <img src="{{ comment.image.url }}">
+                                        {% endif %}
+                                        {{ comment.contenu_commentaire }}
                                     </p>
-                                </span>
+                                    <h5 class="danger">
+                                        {{ comment.date_creation }}
+                                        <a href="{% url 'comment_responses' comment.id %}" class="comment_or_response">
+                                            Répondre 
+                                        </a>
+                                    </h5>
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -119,7 +110,7 @@
         <script src="{% static 'assets/ressources/scripts/chats.js' %}"></script>
         <script src="{% static 'assets/ressources/scripts/theme.js' %}"></script> 
         <script src="{% static 'assets/ressources/scripts/Retour.js' %}"></script>
-        <!-- <script src="{% static 'assets/algos/scripts/secrete.js' %}"></script> -->
+        <script src="{% static 'assets/algos/scripts/secrete.js' %}"></script>
         <script type="module" src="{% static 'node_modules/emoji-picker-element/picker.js' %}" defer></script>
 
     </body>

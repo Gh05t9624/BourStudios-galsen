@@ -46,40 +46,32 @@
 
                     {% for response in responses %}
                         <div class="chat-r">
-                            <div class="mess mess-r">
-                                <span>
-                                    <a href="#"> 
-                                        {% if user.profile_image and user.profile_image.url %}
-                                            <img src="{{ response.user.profile_image.url }}" class="auteur">
-                                        {% else %}
-                                            <img src="{% static 'assets/default/user.png' %}"class="auteur">
-                                        {% endif %}
-                                    </a>
-                                    <p>
-                                        <i class="black">{{ response.user.first_name }} {{ response.user.last_name }}:</i>
 
-                                            {% if response.image %}
-                                                <img src="{{ response.image.url }}" class="ImgComment">
+                            <div class="comments">
+                                <div class="message_comment">
+                                    <h3>
+                                        <a href="{% url 'user_detail' pk=post.user.id %}">
+                                            {% if user.profile_images and user.profile_images.url %}
+                                                <img src="{{ response.user.profile_images.url }}">
+                                            {% else %}
+                                                <img src="{% static 'assets/default/user.png' %}">
                                             {% endif %}
-                                        <b>
-                                            {{ response.contenu_text }}
-                                        </b>
-
-                                        <span>{{ response.date_creation }} | 
-                                            <a href="#" class="comment_or_response">
-                                                Répondre 
-                                                <span class="primary" style="font-weight: bold;">
-                                                    {% if response.nombre_response > 1000 %}
-                                                        {{ reponse.nombre_response|divisibleby:1000|floatformat:"0.1" }}k
-                                                    {% else %}
-                                                        {{ response.nombre_response }}
-                                                    {% endif %}
-                                                </span>
-                                            </a>
-                                        </span>
-                                        <b><a href="#">Réaction: <img src="assets/images/pic-4.png" class="reaction"> <img src="assets/images/pic-4.png" class="reaction"> <img src="assets/images/pic-4.png" class="reaction"> <img src="assets/images/pic-4.png" class="reaction"></a> </b>
+                                        </a>
+                                        {{ response.user.first_name }} {{ response.user.last_name }}
+                                    </h3>
+                                    <p>
+                                        {% if response.image %}
+                                            <img src="{{ response.image.url }}">
+                                        {% endif %}
+                                        {{ response.contenu_text }}
                                     </p>
-                                </span>
+                                    <h5 class="danger">
+                                        {{ response.date_creation }}
+                                        <a href="#">
+                                            Répondre 
+                                        </a>
+                                    </h5>
+                                </div>
                             </div>
                         </div>
                     {% endfor %}

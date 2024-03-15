@@ -78,6 +78,7 @@ class PersonnelDetails(DetailView):
         context = super().get_context_data(**kwargs)
         print("Contexte de la vue détaillée :", context)
         return context
+# break   
 
 # ========== Details: Ecole ===================
 class EcoleDetails(DetailView):
@@ -842,10 +843,12 @@ def Per_job(request):
 
 @role_required(['personnel'])
 def Per_boutique(request):
+    produits = Product.objects.select_related('boutique').order_by('-date_creation').all()
     user = request.user
 
     context = {
-        'user': user
+        'user': user,
+        'produits': produits
     }
     
     return render(request, 'users/Personnel/boutique.html', context)
@@ -896,20 +899,11 @@ def En_ecole(request):
 
 @role_required(['entreprise'])
 def En_boutique(request):
-    try:
-        # Récupère la boutique associée à l'utilisateur connecté
-        user_boutique = Boutique.objects.get(user=request.user)
-        
-        # Récupérer les produits associés à cette boutique
-        produits = user_boutique.product_set.all()
-        
-    except Boutique.DoesNotExist:
-        # Redirige vers une page d'erreur si la boutique n'existe pas
-        return render(request, 'erreur.html', {'message': "Boutique non trouvée."})
+    produits = Product.objects.select_related('boutique').order_by('-date_creation').all()
+    user = request.user
 
-    # Maintenant, tu peux utiliser user_boutique et produits dans ton contexte pour le rendre disponible dans ton template
     context = {
-        'user_boutique': user_boutique,
+        'user': user,
         'produits': produits
     }
     return render(request, 'users/Entreprise/boutique.html', context)
@@ -959,10 +953,12 @@ def Ec_entreprise(request):
 
 @role_required(['ecole'])
 def Ec_boutique(request):
+    produits = Product.objects.select_related('boutique').order_by('-date_creation').all()
     user = request.user
-    
+
     context = {
-        'user' : user
+        'user': user,
+        'produits': produits
     }
     return render(request, 'users/Ecole/boutique.html', context)
 

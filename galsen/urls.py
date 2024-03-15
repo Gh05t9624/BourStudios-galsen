@@ -46,7 +46,7 @@ urlpatterns = [
     path('post/<int:pk>/like',AddLikes.as_view(),name='likes'),
     path('post/<int:pk>/dislike',AddDislike.as_view(),name='dislike'),
     
-    # ========== Details: Profil, Personnels, Entreprise, Ecole ===================
+    # ========== Details: Profil, Personnels, Entreprise, Ecole, Boutique ===================
     path('personnel/<int:pk>/', PersonnelDetails.as_view(), name='personnel_details'),
     path('ecole/<int:pk>/', EcoleDetails.as_view(), name='ecole_details'),
     path('entreprise/<int:pk>/', EntrepriseDetails.as_view(), name='entreprise_details'),
