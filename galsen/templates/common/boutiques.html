@@ -68,7 +68,7 @@
                             <span class="body">
                                 {{ produit.nom_produit }}
                                 <p class="danger">
-                                    <span class="primary">Poster le </span>{{ produit.date_creation }}
+                                    <span class="primary">Poster le </span>{{ produit.date_creation|date:"d F Y à H:i" }}
                                 </p>
                             </span>
                         </a>

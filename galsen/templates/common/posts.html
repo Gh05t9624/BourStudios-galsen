@@ -77,7 +77,8 @@
                                 </span>
                             </div>
                             <div class="time_post">
-                                <span class="fa fa-clock-o">&nbsp;<i class="primary">Posté le {{ post.date_creation_post }},</i></span>
+                                <span class="fa fa-clock-o">&nbsp;<i class="primary">Posté le {{ post.date_creation_post|date:"d F Y à H:i" }}
+                                    ,</i></span>
                                 &nbsp;
                                 <span class="fa fa-desktop">&nbsp;
                                     <i class="primary">depuis un systéme</i> 
