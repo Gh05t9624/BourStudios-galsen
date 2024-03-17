@@ -215,7 +215,17 @@ def register(request):
             user = form.save()
             user.backend = 'galsen.backends.EmailBackend'
             login(request, user)
-            return redirect('profil')
+            
+            user_role = request.user.rôle
+
+            if user_role == 'admin':
+                return render(request, '')
+            elif user_role == 'personnel':
+                return render(request, 'auth/personnel.html')
+            elif user_role == 'ecole':
+                return render(request, 'auth/ecole.html')
+            elif user_role == 'entreprise':
+                return render(request, 'auth/entreprise.html')
     else:
         form = CustomUserCreationForm()
 
@@ -243,17 +253,30 @@ def profile(request):
         user.langue = langue
         user.indicatif_pays = indicatif
         user.number_phone = phone
-        user.first_name = firstname
-        user.last_name = lastname
+
+        # Vérifier si les champs first_name et last_name sont fournis, sinon les définir sur None
+        user.first_name = firstname if firstname else None
+        user.last_name = lastname if lastname else None
+
         user.birthday = birthday
-        
 
         user.save()
 
         messages.success(request, 'Profil mis à jour avec succès.')
 
         return redirect('login')
-    return render(request, 'auth/profils.html')
+
+    user_role = request.user.rôle
+
+    if user_role == 'admin':
+        return render(request, '')
+    elif user_role == 'personnel':
+        return render(request, 'auth/personnel.html')
+    elif user_role == 'ecole':
+        return render(request, 'auth/ecole.html')
+    elif user_role == 'entreprise':
+        return render(request, 'auth/entreprise.html')
+
 
 def log_out(request):
     # pass
@@ -793,6 +816,11 @@ class AddDislike(LoginRequiredMixin, View):
 def Per_posts(request):
     # Récupérer tous les posts avec les médias associés, les utilisateurs, et la date de création
     posts = Post.objects.select_related('user').prefetch_related('mediaspost_set').order_by('-date_creation_post').all()
+    
+    if request.method == "GET":
+        contenu_post = request.GET.get('poste')
+        if contenu_post is not None:
+            posts = Post.objects.filter(contenu_post__icontains=contenu_post)
 
     # Mettre à jour le champ marque_dispositif dans le modèle CustomUser
     if request.user.is_authenticated:
@@ -810,6 +838,11 @@ def Per_ecole(request):
     CustomUsers = CustomUser.objects.filter(rôle='ecole')
     user = request.user
     
+    if request.method == "GET":
+        username = request.GET.get('ecole')
+        if username is not None:
+            CustomUsers = CustomUser.objects.filter(username__icontains=username)
+    
     context = {
         'CustomUsers': CustomUsers,
         'user': user
@@ -822,6 +855,11 @@ def Per_entreprise(request):
     CustomUsers = CustomUser.objects.filter(rôle='entreprise')
     user = request.user
     
+    if request.method == "GET":
+        username = request.GET.get('entreprise')
+        if username is not None:
+            CustomUsers = CustomUser.objects.filter(username__icontains=username)
+    
     context = {
         'CustomUsers': CustomUsers,
         'user': user
@@ -833,6 +871,11 @@ def Per_entreprise(request):
 def Per_job(request):
     jobs = Job.objects.select_related('user').order_by('-date_creation_post').all()
     user = request.user
+    
+    if request.method == "GET":
+        title = request.GET.get('job')
+        if title is not None:
+            jobs = Job.objects.filter(title__icontains=title)
 
     context = {
         'jobs': jobs,
@@ -845,6 +888,11 @@ def Per_job(request):
 def Per_boutique(request):
     produits = Product.objects.select_related('boutique').order_by('-date_creation').all()
     user = request.user
+    
+    if request.method == "GET":
+        nom_produit= request.GET.get('boutique')
+        if nom_produit is not None:
+            produits = Product.objects.filter(nom_produit__icontains=nom_produit)
 
     context = {
         'user': user,
@@ -860,6 +908,11 @@ def En_posts(request):
     # Récupérer tous les posts avec les médias associés, les utilisateurs, et la date de création
     posts = Post.objects.select_related('user').prefetch_related('mediaspost_set').order_by('-date_creation_post').all()
     user = request.user
+    
+    if request.method == "GET":
+        contenu_post = request.GET.get('poste')
+        if contenu_post is not None:
+            posts = Post.objects.filter(contenu_post__icontains=contenu_post)
     
     if request.user.is_authenticated:
         marque_dispositif = obtenir_marque_dispositif(request)
@@ -878,6 +931,11 @@ def En_personnel(request):
     CustomUsers = CustomUser.objects.filter(rôle='personnel')
     user = request.user
     
+    if request.method == "GET":
+        metier = request.GET.get('personnel')
+        if metier is not None:
+            CustomUsers = CustomUser.objects.filter(metier__icontains=metier)
+    
     context = {
         'CustomUsers': CustomUsers,
         'user': user
@@ -890,6 +948,11 @@ def En_ecole(request):
     CustomUsers = CustomUser.objects.filter(rôle='ecole')
     user = request.user
     
+    if request.method == "GET":
+        username = request.GET.get('ecole')
+        if username is not None:
+            CustomUsers = CustomUser.objects.filter(username__icontains=username)
+    
     context = {
         'CustomUsers': CustomUsers,
         'user': user
@@ -901,6 +964,11 @@ def En_ecole(request):
 def En_boutique(request):
     produits = Product.objects.select_related('boutique').order_by('-date_creation').all()
     user = request.user
+    
+    if request.method == "GET":
+        nom_produit= request.GET.get('boutique')
+        if nom_produit is not None:
+            produits = Product.objects.filter(nom_produit__icontains=nom_produit)
 
     context = {
         'user': user,
@@ -915,6 +983,11 @@ def Ec_posts(request):
     # Récupérer tous les posts avec les médias associés, les utilisateurs, et la date de création
     posts = Post.objects.select_related('user').prefetch_related('mediaspost_set').order_by('-date_creation_post').all()
     user = request.user
+    
+    if request.method == "GET":
+        contenu_post = request.GET.get('poste')
+        if contenu_post is not None:
+            posts = Post.objects.filter(contenu_post__icontains=contenu_post)
     
     if request.user.is_authenticated:
         marque_dispositif = obtenir_marque_dispositif(request)
@@ -933,6 +1006,11 @@ def Ec_personnel(request):
     CustomUsers = CustomUser.objects.filter(rôle='personnel')
     user = request.user
     
+    if request.method == "GET":
+        metier = request.GET.get('personnel')
+        if metier is not None:
+            CustomUsers = CustomUser.objects.filter(metier__icontains=metier)
+    
     context = {
         'CustomUsers' : CustomUsers,
         'user' : user
@@ -945,6 +1023,11 @@ def Ec_entreprise(request):
     CustomUsers = CustomUser.objects.filter(rôle='entreprise')
     user = request.user
     
+    if request.method == "GET":
+        username = request.GET.get('entreprise')
+        if username is not None:
+            CustomUsers = CustomUser.objects.filter(username__icontains=username)
+    
     context = {
         'CustomUsers' : CustomUsers,
         'user' : user
@@ -955,6 +1038,11 @@ def Ec_entreprise(request):
 def Ec_boutique(request):
     produits = Product.objects.select_related('boutique').order_by('-date_creation').all()
     user = request.user
+    
+    if request.method == "GET":
+        nom_produit= request.GET.get('boutique')
+        if nom_produit is not None:
+            produits = Product.objects.filter(nom_produit__icontains=nom_produit)
 
     context = {
         'user': user,

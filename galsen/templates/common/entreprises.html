@@ -1,7 +1,7 @@
 {% load static %}
 <section>
     <form action="" class="search">
-        <input type="search" name="q" id="search-input" placeholder="Rechercher Filtrer"
+        <input type="search" name="entreprise" id="search-input" placeholder="Rechercher Filtrer"
         />
         <button type="submit" class="button">
             <i class="fa fa-search"> Search </i>
@@ -67,7 +67,7 @@
                     <img src="{% static 'assets/default/user.png' %}" class="enligne">
                 {% endif %}
                 <div class="name_job_country">
-                    <h3 class="name">{{ CustomUsers.first_name }} {{ CustomUsers.last_name }}</h3>
+                    <h3 class="name">{{ CustomUsers.username }}</h3>
                     <h4 class="job">
                         <i class="fa fa-briefcase danger"></i>
                         <span>|</span>
@@ -77,7 +77,17 @@
                     </h4>
                     <h5 class="country">
                         <i class="fa fa-map-marker text-muted"></i>
-                        {{ CustomUsers.pays }}, {{ CustomUsers.ville }}, {{ CustomUsers.quartier }}
+                        {% if CustomUsers.pays %}
+                            {{ CustomUsers.pays }},
+                        {% endif %}
+
+                        {% if CustomUsers.ville %}
+                           {{ CustomUsers.ville }},
+                        {% endif %}
+
+                        {% if CustomUsers.quartier %}
+                            {{ CustomUsers.quartier }}
+                        {% endif %}
                     </h5>
                     <br>
                     <h5 class="job_date"> 

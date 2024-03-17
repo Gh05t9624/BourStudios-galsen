@@ -1,0 +1,91 @@
+{% extends 'auth/layouts/forms.html' %}
+
+{% load static %}
+
+{% block Authentification %}
+<img src="{% static 'assets/logo/school.jpg' %}">
+
+<div id="wrapper">
+    <div class="form-container">
+        <span class="form-heading"> Profil </span>
+        
+        <form method="POST" action="/profil">
+            {% csrf_token %}
+
+
+            <div class="input-group wrapper">
+                <i class="fa fa-map-marker"></i>
+                <div autocomplete="off">
+                    <div>
+                        <input type="text" class="form-control" id="countryInput" name="pays" placeholder="Votre pays" onchange="updateIndicatif()" />
+
+                      <span class="bar"></span>
+                    </div>
+                    <ul class="list"></ul>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <i class="fa fa-map"></i>
+                <input id="ville" type="text" class="form-control" name="ville" value="" required autocomplete="ville" placeholder="Votre ville">
+                <span class="bar"></span>
+            </div>
+
+            <div class="input-group">
+                <i class="fa fa-home"></i>
+                <input id="quartier" type="text" class="form-control" name="quartier" value="" required autocomplete="quartier" placeholder="Votre quartier">
+                <span class="bar"></span>
+            </div>
+
+            <div class="input-group">
+                <i class="fa fa-flag-checkered"></i>
+                <input id="langue" type="text" class="form-control" name="langue" value="" required autocomplete="langue" placeholder="Votre Langue">
+                <span class="bar"></span>
+            </div>
+
+            <div class="input-group">
+                <i class="fa fa-flag"></i>
+                <input id="indicatif" type="number" class="form-control" name="indicatif" value="" required autocomplete="indicatif" placeholder="Votre indicatif pays">
+                <span class="bar"></span>
+            </div>
+
+            <div class="input-group">
+                <i class="fa fa-phone"></i>
+                <input id="phone" type="number" class="form-control" name="phone" value="" required autocomplete="phone" placeholder="Votre numéro de téléphone">
+                <span class="bar"></span>
+            </div>
+
+            <div class="input-group">
+                <i class="fa fa-user"></i>
+                <input id="firstname" type="text" class="form-control" name="firstname" autocomplete="firstname" placeholder="Prénom du Chef d'entreprise">
+                <span class="bar"></span>
+            </div>
+
+            <div class="input-group">
+                <i class="fa fa-user"></i>
+                <input id="lastname" type="text" class="form-control" name="lastname" autocomplete="lastname" placeholder="Nom du Chef d'entreprise">
+                <span class="bar"></span>
+            </div>
+
+            <div class="input-group">
+                <i class="fa fa-calendar"></i>
+                <input type="date" name="birthday" id="date" min="1960-01-01" style="font-weight: bold;">
+                <span class="bar"></span>
+            </div><br>
+            <h3 class="danger" style="margin-left: 10px;">Date de naissance ^</h3>
+
+
+            <div class="input-group">
+                <button type="submit" name="inscription" value="Valider">
+                    Valider
+                </button>
+            </div>
+
+            
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

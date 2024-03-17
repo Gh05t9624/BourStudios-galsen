@@ -42,6 +42,7 @@ class CustomUser(AbstractUser):
     ]
     marque_dispositif = models.CharField(max_length=255, null=True, blank=True)
     metier = models.CharField(max_length=150, null=True, blank=True)
+    etablissement = models.CharField(max_length=255, null=True, blank=True)
     pays = models.CharField(max_length=50, null=True, blank=True)
     ville = models.CharField(max_length=50, null=True, blank=True)
     quartier = models.CharField(max_length=50, null=True, blank=True)
@@ -58,6 +59,7 @@ class CustomUser(AbstractUser):
     rôle = models.CharField(max_length=255, choices=ROLES, default='personnel')
     genre = models.CharField(max_length=255, choices=GENRE, default='homme')
     situation_matrimoniale = models.CharField(max_length=20, choices=SITUATION_MATRIMONIALE, default='celibataire')
+
     
     def get_absolute_url(self):
         return reverse('a_propos_current_user')

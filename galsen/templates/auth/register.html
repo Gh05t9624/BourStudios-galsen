@@ -1,5 +1,4 @@
 {% extends 'auth/layouts/forms.html' %}
-
 {% load static %}
 
 {% block Authentification %}
@@ -42,9 +41,12 @@
                 <label><i class="fa fa-user-secret"></i>Pseudo</label>
                 {{ form.username }}
                 <span class="bar"></span>
-                <!-- {% if form.username.errors %}
-                    <p class="danger">{{ form.username.errors|join:", " }}</p>
-                {% endif %} -->
+            </div>
+
+            <div class="inputfield" id="etablissement_field" style="display: none;"> 
+                <label><i class="fa fa-briefcase"></i>Nom Complet de Votre Etablissement</label>
+                {{ form.etablissement }}
+                <span class="bar"></span>
             </div>
 
             <div class="inputfield">
@@ -100,5 +102,27 @@
 
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var roleSelect = document.querySelector('#id_rôle');
+        var etablissementField = document.querySelector('#etablissement_field');
+
+        roleSelect.addEventListener('change', function () {
+            if (roleSelect.value === 'ecole' || roleSelect.value === 'entreprise') {
+                etablissementField.style.display = 'block';
+            } else {
+                etablissementField.style.display = 'none';
+            }
+        });
+
+        // Initial check to hide/show the field based on initial value
+        if (roleSelect.value === 'ecole' || roleSelect.value === 'entreprise') {
+            etablissementField.style.display = 'block';
+        } else {
+            etablissementField.style.display = 'none';
+        }
+    });
+</script>
 
 {% endblock %}

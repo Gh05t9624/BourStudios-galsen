@@ -1,7 +1,7 @@
 {% load static %}
 <section>
-    <form action="" class="search">
-        <input type="search" name="q" id="search-input" placeholder="Rechercher Filtrer"
+    <form class="search">
+        <input type="search" name="ecole" id="search-input" placeholder="Rechercher Filtrer"
         />
         <button type="submit" class="button">
             <i class="fa fa-search"> Search </i>
@@ -67,7 +67,7 @@
                     <img src="{% static 'assets/default/user.png' %}" class="enligne">
                 {% endif %}
                 <div class="name_job_country">
-                    <h3 class="name">{{ CustomUsers.first_name }} {{ CustomUsers.last_name }}</h3>
+                    <h3 class="name">{{ CustomUsers.username }}</h3>
                     <h4 class="job">
                         <i class="fa fa-graduation-cap danger"></i>
                         <span>|</span>
